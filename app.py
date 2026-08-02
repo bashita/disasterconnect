@@ -37,7 +37,7 @@ DB_CONFIG = {
     'user': os.getenv('MYSQL_USER', 'avnadmin'),
     'password': os.getenv('MYSQL_PASSWORD'),
     'database': os.getenv('MYSQL_DATABASE', 'disaster'),
-    'port':os.getenv('DB_PORT',26505),
+    'port':int(os.getenv('DB_PORT',26505)),
     'charset': 'utf8mb4',
     'cursorclass': pymysql.cursors.DictCursor,
     'autocommit': True,
