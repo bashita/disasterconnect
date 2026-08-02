@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Contact Messages</title>
+
+    <style>
+        :root {
+            --primary: #F59E0B;
+            --primary-hover: #FBBF24;
+            --primary-dark: #D97706;
+            --bg-dark: #0B1120;
+            --sidebar-bg: rgba(15, 23, 42, 0.75);
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(245, 158, 11, 0.2);
+            --text-main: #F8FAFC;
+            --text-muted: #CBD5E1;
+            --input-bg: rgba(15, 23, 42, 0.7);
+            --danger: #EF4444;
+            --success: #10B981;
+            --bubble-incoming: rgba(30, 41, 59, 0.85);
+            --bubble-outgoing: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+        }
+        body{
+            font-family:Arial;
+            background:#111827;
+            color:white;
+            padding:40px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th,td{
+            border:1px solid gray;
+            padding:10px;
+        }
+
+        th{
+            background:#f59e0b;
+            color:black;
+        }
+        .btn-dashboard {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .btn-dashboard:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+            border-color: var(--primary);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>Contact Messages</h1>
+
+<table>
+
+<tr>
+
+<th>Name</th>
+<th>Email</th>
+<th>Subject</th>
+<th>Message</th>
+<th>Date</th>
+
+</tr>
+
+{% for m in messages %}
+
+<tr>
+
+<td>{{m.name}}</td>
+<td>{{m.email}}</td>
+<td>{{m.subject}}</td>
+<td>{{m.message}}</td>
+<td>{{m.submitted_at}}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<a class="btn-dashboard" href="{{ url_for('coordinator_dashboard') }}">
+    <i class="fa-solid fa-arrow-left"></i> Dashboard
+</a>
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Emergency - DisasterConnect India</title>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ==========================================================================
+       1. CORE THEME & RESET
+       ========================================================================== */
+    :root {
+      --primary: #F59E0B;
+      --primary-hover: #FBBF24;
+      --primary-dark: #D97706;
+      --bg-dark: #0B1120;
+      --sidebar-bg: rgba(15, 23, 42, 0.75);
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(245, 158, 11, 0.2);
+      --card-glow: rgba(245, 158, 11, 0.12);
+      --text-main: #F8FAFC;
+      --text-muted: #CBD5E1;
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --input-border: rgba(245, 158, 11, 0.2);
+      --danger: #EF4444;
+      --success: #10B981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 85% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 15% 80%, rgba(239, 68, 68, 0.04) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 3px; }
+
+    /* ==========================================================================
+       2. SIDEBAR NAVIGATION
+       ========================================================================== */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .sidebar-brand i { color: var(--primary); }
+
+    .nav-menu {
+      list-style: none;
+      padding: 1.5rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active a, .nav-item a:hover {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .sidebar-footer {
+      padding: 1.25rem;
+      border-top: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .btn-logout {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: 0.3s;
+    }
+
+    .btn-logout:hover { background: var(--danger); color: #fff; }
+
+    /* ==========================================================================
+       3. MAIN CONTENT WRAPPER & FORM STYLING
+       ========================================================================== */
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 1100px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dashboard-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFF 0%, var(--primary-hover) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .dashboard-title p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .form-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 25px var(--card-glow);
+      padding: 2.5rem;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i.input-icon {
+      position: absolute;
+      left: 1rem;
+      color: var(--primary);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 0.8rem 1rem 0.8rem 2.75rem;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    textarea {
+      padding: 0.8rem 1rem 0.8rem 2.75rem;
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F59E0B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    select option {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    /* Skills Checklist / Badges */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .skill-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      padding: 0.65rem 0.85rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      transition: all 0.3s ease;
+    }
+
+    .skill-checkbox:hover {
+      border-color: var(--primary);
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .skill-checkbox input[type="checkbox"] {
+      width: auto;
+      padding: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
+      background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+    }
+
+    /* ==========================================================================
+       4. ANIMATIONS & RESPONSIVE
+       ========================================================================== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full-width { grid-column: span 1; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 70px; }
+      .sidebar-brand span, .nav-item span, .sidebar-footer span { display: none; }
+      .main-wrapper { margin-left: 70px; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. SIDEBAR NAVIGATION
+       ========================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>DisasterConnect</span>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="{{ url_for('coordinator_dashboard') }}"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      </li>
+      <li class="nav-item active">
+        <a href="{{ url_for('create_emergency') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>Create Emergency</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('manage_volunteers') }}"><i class="fa-solid fa-users"></i><span>Volunteers</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('assign_task_page') }}"><i class="fa-solid fa-list-check"></i><span>Assign Tasks</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('live_map') }}"><i class="fa-solid fa-map-location-dot"></i><span>Live Map</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('coordinator_dashboard') }}"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a class="btn-logout" href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       2. MAIN CONTENT AREA
+       ========================================================================== -->
+  <main class="main-wrapper">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="dashboard-title">
+        <h1>Broadcast New Emergency</h1>
+        <p>Deploy AI matching and alert registered volunteers in real-time</p>
+      </div>
+    </header>
+
+    <!-- Create Emergency Form Card -->
+    <div class="form-card">
+      <form action="{{ url_for('create_emergency') }}" method="POST">
+        
+        <div class="form-grid">
+          
+          <!-- 1. Emergency Title -->
+          <div class="form-group full-width">
+            <label for="title"><i class="fa-solid fa-heading"></i> Emergency Incident Title</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-bullhorn input-icon"></i>
+              <input 
+                type="text" 
+                id="title" 
+                name="title" 
+                placeholder="e.g. Severe Flood Relief & Medical Evacuation" 
+                required 
+              />
+            </div>
+          </div>
+
+          <!-- 2. Priority Level -->
+          <div class="form-group">
+            <label for="priority"><i class="fa-solid fa-layer-group"></i> Priority / Urgency</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-triangle-exclamation input-icon"></i>
+              <select id="priority" name="severity" required>
+                <option value="" disabled selected>Select priority level</option>
+                <option value="Critical" style="color: var(--danger); font-weight: bold;">Critical (Immediate SOS)</option>
+                <option value="High">High Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="Low">Low / General Support</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 3. Number of Volunteers Needed -->
+          <div class="form-group">
+            <label for="volunteersCount"><i class="fa-solid fa-users-gear"></i> Number of Volunteers Required</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-hashtag input-icon"></i>
+              <input 
+                type="number" 
+                id="volunteersCount" 
+                name="volunteersCount" 
+                placeholder="e.g. 25" 
+                min="1" 
+                max="500" 
+                required 
+              />
+            </div>
+          </div>
+
+          <!-- 4. Location Details -->
+          <div class="form-group full-width">
+            <label for="location"><i class="fa-solid fa-map-pin"></i> Incident Location (District, State & Landmark)</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-location-dot input-icon"></i>
+              <input 
+                type="text" 
+                id="location" 
+                name="location_name"
+                placeholder="e.g. Cuttack Sector 9, Odisha (Near Mahanadi Bank)" 
+                required 
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="latitude"><i class="fa-solid fa-compass"></i> Latitude</label>
+            <input type="number" id="latitude" name="latitude" step="any" min="-90" max="90" placeholder="e.g. 20.4625" required />
+          </div>
+
+          <div class="form-group">
+            <label for="longitude"><i class="fa-solid fa-compass"></i> Longitude</label>
+            <input type="number" id="longitude" name="longitude" step="any" min="-180" max="180" placeholder="e.g. 85.8828" required />
+          </div>
+
+          <!-- 5. Description -->
+          <div class="form-group full-width">
+            <label for="description"><i class="fa-solid fa-align-left"></i> Situation Description & Special Instructions</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-pen-to-square input-icon" style="top: 1rem;"></i>
+              <textarea 
+                id="description" 
+                name="description" 
+                placeholder="Describe the current disaster situation, access constraints, supply needs, and safe staging points..." 
+                required
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- 6. Required Volunteer Skills (Checkboxes) -->
+          <div class="form-group full-width">
+            <label><i class="fa-solid fa-kit-medical"></i> Required Volunteer Capabilities</label>
+            <div class="skills-grid">
+              <label class="skill-checkbox">
+                <input type="checkbox" name="skills[]" value="first-aid" />
+                <span>Medical / First Aid</span>
+              </label>
+              <label class="skill-checkbox">
+                <input type="checkbox" name="skills[]" value="search-rescue" />
+                <span>Search & Rescue</span>
+              </label>
+              <label class="skill-checkbox">
+                <input type="checkbox" name="skills[]" value="swimming-boating" />
+                <span>Boating / Swimming</span>
+              </label>
+              <label class="skill-checkbox">
+                <input type="checkbox" name="skills[]" value="food-distribution" />
+                <span>Food & Rations</span>
+              </label>
+              <label class="skill-checkbox">
+                <input type="checkbox" name="skills[]" value="ham-radio" />
+                <span>HAM Radio / Telecom</span>
+              </label>
+              <label class="skill-checkbox">
+                <input type="checkbox" name="skills[]" value="shelter-mgmt" />
+                <span>Shelter Mgmt</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit">
+          <i class="fa-solid fa-circle-plus"></i> Create & Broadcast Emergency
+        </button>
+
+      </form>
+    </div>
+
+  </main>
+
+</body>
+</html>

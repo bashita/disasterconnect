@@ -1,0 +1,576 @@
+/* ==========================================================================
+   1. CORE THEME, FONTS & RESET
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #F59E0B;
+  --primary-hover: #FBBF24;
+  --primary-dark: #D97706;
+  --bg-dark: #0B1120;
+  --sidebar-bg: rgba(15, 23, 42, 0.75);
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --card-border: rgba(245, 158, 11, 0.2);
+  --text-main: #F8FAFC;
+  --text-muted: #CBD5E1;
+  --input-bg: rgba(15, 23, 42, 0.7);
+  --danger: #EF4444;
+  --success: #10B981;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Poppins', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 85% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 15% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 45%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Headings Upgrade */
+h1, h2, h3 {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* ==========================================================================
+   2. NAVBAR
+   ========================================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 8%;
+  background: rgba(11, 17, 32, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--card-border);
+  z-index: 999;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo i {
+  color: var(--primary);
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2.2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   3. HERO SECTION
+   ========================================================================== */
+.hero {
+  height: 100vh;
+  background: 
+    linear-gradient(180deg, rgba(11, 17, 32, 0.6) 0%, rgba(11, 17, 32, 0.95) 100%),
+    url("https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.hero-content {
+  max-width: 850px;
+}
+
+.hero h1 {
+  font-size: 3.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+  animation: slideDown 1s ease;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: var(--text-muted);
+  animation: fadeUp 1.2s ease;
+}
+
+/* ==========================================================================
+   4. PORTAL SECTION
+   ========================================================================== */
+.portal-section {
+  padding: 100px 8%;
+  text-align: center;
+}
+
+.portal-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+  color: var(--primary);
+}
+
+.portal-section > p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 3.5rem;
+}
+
+.portal-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.portal-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  text-decoration: none;
+  color: var(--text-main);
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.portal-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--primary);
+  box-shadow: 0 12px 30px rgba(245, 158, 11, 0.15);
+}
+
+.portal-card i {
+  font-size: 3.2rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.portal-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+.portal-card p {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  flex-grow: 1;
+}
+
+/* Shared Portal Button */
+.portal-card button {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--bg-dark);
+  border: none;
+  padding: 0.85rem 2rem;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+.portal-card button:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+}
+
+/* ==========================================================================
+   5. ABOUT SECTION
+   ========================================================================== */
+.about {
+  padding: 100px 10%;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.4);
+  border-y: 1px solid var(--card-border);
+}
+
+.about h2 {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.about p {
+  max-width: 800px;
+  margin: auto;
+  line-height: 1.8;
+  color: var(--text-muted);
+  font-size: 1.15rem;
+}
+
+/* ==========================================================================
+   6. FEATURES SECTION
+   ========================================================================== */
+.features {
+  padding: 100px 8%;
+  text-align: center;
+}
+
+.features h2 {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3.5rem;
+}
+
+.feature-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 2.2rem 1.8rem;
+  border-radius: 20px;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
+}
+
+.feature-card i {
+  font-size: 3rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.feature-card h3 {
+  margin-bottom: 0.8rem;
+  font-size: 1.35rem;
+  color: var(--text-main);
+}
+
+.feature-card p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   7. HOW IT WORKS
+   ========================================================================== */
+.steps {
+  padding: 100px 8%;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.steps h2 {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 4rem;
+}
+
+.step-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2.5rem;
+}
+
+.step {
+  padding: 1.5rem;
+}
+
+.circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--bg-dark);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  margin: 0 auto 1.5rem auto;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+.step h3 {
+  margin-bottom: 0.8rem;
+  font-size: 1.35rem;
+  color: var(--text-main);
+}
+
+.step p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   8. STATISTICS SECTION
+   ========================================================================== */
+.stats {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+  border-y: 1px solid var(--card-border);
+  color: var(--text-main);
+  padding: 80px 8%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  text-align: center;
+}
+
+.stat-box {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 2.5rem 1.5rem;
+  backdrop-filter: blur(12px);
+  transition: all 0.4s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.stat-box h1 {
+  font-size: 3.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.stat-box p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   9. CTA SECTION
+   ========================================================================== */
+.cta {
+  padding: 100px 8%;
+  text-align: center;
+}
+
+.cta h2 {
+  font-size: 2.8rem;
+  color: var(--text-main);
+  margin-bottom: 1.2rem;
+}
+
+.cta p {
+  max-width: 600px;
+  margin: 0 auto 2.5rem auto;
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 1.15rem;
+}
+
+.cta button {
+  padding: 1rem 2.8rem;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--bg-dark);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+.cta button:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(245, 158, 11, 0.45);
+}
+
+/* ==========================================================================
+   10. CONTACT SECTION
+   ========================================================================== */
+.contact {
+  padding: 100px 8%;
+  background: rgba(15, 23, 42, 0.4);
+  text-align: center;
+}
+
+.contact h2 {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 3.5rem;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.contact-grid div {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 2.5rem 1.5rem;
+  border-radius: 18px;
+  color: var(--text-muted);
+  backdrop-filter: blur(12px);
+  transition: all 0.4s ease;
+}
+
+.contact-grid div:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary);
+  color: var(--text-main);
+}
+
+.contact-grid i {
+  font-size: 2.2rem;
+  color: var(--primary);
+  margin-bottom: 1.2rem;
+  display: block;
+}
+
+/* ==========================================================================
+   11. FOOTER
+   ========================================================================== */
+footer {
+  background: #070B14;
+  border-top: 1px solid rgba(245, 158, 11, 0.15);
+  color: var(--text-muted);
+  padding: 2rem 8%;
+  text-align: center;
+}
+
+footer p {
+  margin: 0.4rem 0;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   12. ANIMATIONS & RESPONSIVENESS
+   ========================================================================== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating effect for top cards */
+.portal-card:nth-child(1) { animation: float 6s ease-in-out infinite; }
+.portal-card:nth-child(2) { animation: float 7s ease-in-out infinite; }
+.portal-card:nth-child(3) { animation: float 8s ease-in-out infinite; }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 1.2rem;
+  }
+  .nav-links {
+    gap: 20px;
+  }
+  .hero h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+  .portal-section, .features, .about, .steps, .contact, .cta {
+    padding: 60px 5%;
+  }
+  .portal-section h2, .features h2, .about h2, .steps h2, .contact h2, .cta h2 {
+    font-size: 2rem;
+  }
+}

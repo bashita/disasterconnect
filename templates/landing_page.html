@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DisasterConnect | Disaster Response Management</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        <i class="fa-solid fa-shield-heart"></i>
+        DisasterConnect
+    </div>
+
+    <ul class="nav-links">
+
+        <li><a href="{{url_for('landing_page')}}">Home</a></li>
+
+        <li><a href="{{url_for('about')}}">About</a></li>
+
+        <li><a href="#features">Features</a></li>
+
+        <li><a href="{{url_for('contact')}}">Contact</a></li>
+
+    </ul>
+
+</nav>
+
+<!-- ===================== HERO ===================== -->
+
+<section class="hero">
+
+<div class="overlay"></div>
+
+<div class="hero-content">
+
+<h1>
+
+Connecting Volunteers <br>
+
+During Emergencies
+
+</h1>
+
+<p>
+
+An AI-powered Disaster Response Management Platform that helps
+coordinators quickly identify, assign and communicate with nearby
+volunteers during emergencies.
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ===================== LOGIN OPTIONS ===================== -->
+
+<section class="portal-section">
+
+<h2>
+
+Choose Your Portal
+
+</h2>
+
+<p>
+
+Select your role to continue.
+
+</p>
+
+<div class="portal-container">
+
+<a href="{{ url_for('register') }}" class="portal-card">
+
+<i class="fa-solid fa-user-plus"></i>
+
+<h3>Volunteer Registration</h3>
+
+<p>
+
+Become a volunteer and help communities during emergencies.
+
+</p>
+
+<button>
+
+Register
+
+</button>
+
+</a>
+
+<a href="{{ url_for('volunteer_login') }}" class="portal-card">
+
+<i class="fa-solid fa-user"></i>
+
+<h3>Volunteer Login</h3>
+
+<p>
+
+Access your dashboard, tasks and emergency notifications.
+
+</p>
+
+<button>
+
+Login
+
+</button>
+
+</a>
+
+<a href="{{ url_for('coordinator_login') }}" class="portal-card">
+
+<i class="fa-solid fa-user-tie"></i>
+
+<h3>Coordinator Login</h3>
+
+<p>
+
+Manage volunteers, emergencies and response operations.
+
+</p>
+
+<button>
+
+Dashboard
+
+</button>
+
+</a>
+
+</div>
+
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+
+<section class="about" id="about">
+
+<h2>
+
+Why DisasterConnect?
+
+</h2>
+
+<p>
+
+DisasterConnect is an intelligent emergency response platform designed to
+bridge the communication gap between coordinators and volunteers.
+Using AI recommendations and live location tracking, the system helps
+deliver faster and more efficient disaster relief.
+
+</p>
+
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+
+<section class="features" id="features">
+
+<h2>
+
+Platform Features
+
+</h2>
+
+<div class="feature-grid">
+
+<div class="feature-card">
+
+<i class="fa-solid fa-users"></i>
+
+<h3>Volunteer Management</h3>
+
+<p>
+
+Register skilled volunteers and manage their availability.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-location-dot"></i>
+
+<h3>Live Tracking</h3>
+
+<p>
+
+Locate volunteers and emergencies instantly.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-triangle-exclamation"></i>
+
+<h3>Emergency Alerts</h3>
+
+<p>
+
+Receive instant emergency notifications.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-robot"></i>
+
+<h3>AI Assignment</h3>
+
+<p>
+
+Suggest volunteers using AI based on skills and distance.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-comments"></i>
+
+<h3>Coordinator Chat</h3>
+
+<p>
+
+Real-time messaging between volunteers and coordinators.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-chart-column"></i>
+
+<h3>Analytics</h3>
+
+<p>
+
+Monitor emergency statistics and response efficiency.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+
+<section class="steps">
+
+<h2>
+
+How It Works
+
+</h2>
+
+<div class="step-container">
+
+<div class="step">
+
+<div class="circle">
+
+1
+
+</div>
+
+<h3>
+
+Register
+
+</h3>
+
+<p>
+
+Create your volunteer account.
+
+</p>
+
+</div>
+
+<div class="step">
+
+<div class="circle">
+
+2
+
+</div>
+
+<h3>
+
+Get Tasks
+
+</h3>
+
+<p>
+
+Coordinator assigns tasks.
+
+</p>
+
+</div>
+
+<div class="step">
+
+<div class="circle">
+
+3
+
+</div>
+
+<h3>
+
+Receive Alerts
+
+</h3>
+
+<p>
+
+Nearby emergencies are assigned.
+
+</p>
+
+</div>
+
+<div class="step">
+
+<div class="circle">
+
+4
+
+</div>
+
+<h3>
+
+Help Communities
+
+</h3>
+
+<p>
+
+Complete tasks and save lives.
+
+</p>
+
+</div>
+
+<div class="step">
+
+<div class="circle">
+
+5
+
+</div>
+
+<h3>
+
+Communication
+
+</h3>
+
+<p>
+
+Communicate with coordinators via chat.
+
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+<!-- ===================== STATS ===================== -->
+
+<section class="stats">
+
+<div class="stat-box">
+
+<h1>
+
+500+
+
+</h1>
+
+<p>
+
+Volunteers
+
+</p>
+
+</div>
+
+<div class="stat-box">
+
+<h1>
+
+120
+
+</h1>
+
+<p>
+
+Emergencies
+
+</p>
+
+</div>
+
+<div class="stat-box">
+
+<h1>
+
+98%
+
+</h1>
+
+<p>
+
+Response Rate
+
+</p>
+
+</div>
+
+<div class="stat-box">
+
+<h1>
+
+24/7
+
+</h1>
+
+<p>
+
+Support
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ===================== CTA ===================== -->
+
+<section class="cta">
+
+<h2>
+
+Ready to Make a Difference?
+
+</h2>
+
+<p>
+
+Join thousands of volunteers helping communities during emergencies.
+
+</p>
+
+<a href="volunteer-register.html">
+
+<button>
+
+Become a Volunteer
+
+</button>
+
+</a>
+
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+
+<section class="contact" id="contact">
+
+<h2>
+
+Contact Us
+
+</h2>
+
+<div class="contact-grid">
+
+<div>
+
+<i class="fa-solid fa-envelope"></i>
+
+support@disasterconnect.org
+
+</div>
+
+<div>
+
+<i class="fa-solid fa-phone"></i>
+
++91 9876543210
+
+</div>
+
+<div>
+
+<i class="fa-solid fa-location-dot"></i>
+
+Chennai, Tamil Nadu
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+
+<footer>
+
+<p>
+
+© 2026 DisasterConnect
+
+</p>
+
+<p>
+
+Built for Disaster Response Hackathon
+
+</p>
+
+</footer>
+
+</body>
+
+</html>

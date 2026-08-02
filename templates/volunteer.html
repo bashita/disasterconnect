@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volunteer Management - DisasterConnect India</title>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ==========================================================================
+       1. CORE THEME & RESET
+       ========================================================================== */
+    :root {
+      --primary: #F59E0B;
+      --primary-hover: #FBBF24;
+      --primary-dark: #D97706;
+      --bg-dark: #0B1120;
+      --sidebar-bg: rgba(15, 23, 42, 0.75);
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(245, 158, 11, 0.2);
+      --card-glow: rgba(245, 158, 11, 0.12);
+      --text-main: #F8FAFC;
+      --text-muted: #CBD5E1;
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --input-border: rgba(245, 158, 11, 0.2);
+      --danger: #EF4444;
+      --success: #10B981;
+      --info: #3B82F6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 85% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 15% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 3px; }
+
+    /* ==========================================================================
+       2. SIDEBAR NAVIGATION
+       ========================================================================== */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .sidebar-brand i { color: var(--primary); }
+
+    .nav-menu {
+      list-style: none;
+      padding: 1.5rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active a, .nav-item a:hover {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .sidebar-footer {
+      padding: 1.25rem;
+      border-top: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .btn-logout {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: 0.3s;
+    }
+
+    .btn-logout:hover { background: var(--danger); color: #fff; }
+
+    /* ==========================================================================
+       3. MAIN CONTENT AREA & HEADER
+       ========================================================================== */
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .dashboard-header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFF 0%, var(--primary-hover) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .dashboard-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    /* ==========================================================================
+       4. SEARCH & FILTER BAR
+       ========================================================================== */
+    .filter-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      color: var(--text-main);
+      outline: none;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+    }
+
+    .filter-dropdown {
+      min-width: 180px;
+      position: relative;
+    }
+
+    .filter-dropdown select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 0.75rem 2.5rem 0.75rem 1rem;
+      color: var(--text-main);
+      outline: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F59E0B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1rem;
+    }
+
+    .filter-dropdown select option {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       5. VOLUNTEERS DATA TABLE
+       ========================================================================== */
+    .table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 1.5rem;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 1rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: rgba(245, 158, 11, 0.03);
+    }
+
+    .volunteer-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .v-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .v-meta h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .v-meta p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .skill-badge {
+      display: inline-block;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-right: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .badge {
+      padding: 0.3rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-info { background: rgba(59, 130, 246, 0.2); color: var(--info); border: 1px solid rgba(59, 130, 246, 0.3); }
+
+    /* Action Buttons */
+    .action-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-tbl {
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-assign {
+      background: var(--primary);
+      color: var(--bg-dark);
+    }
+    .btn-assign:hover { background: var(--primary-hover); }
+
+    .btn-view {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--info);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .btn-view:hover { background: var(--info); color: #fff; }
+
+    .btn-remove {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .btn-remove:hover { background: var(--danger); color: #fff; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar { width: 70px; }
+      .sidebar-brand span, .nav-item span, .sidebar-footer span { display: none; }
+      .main-wrapper { margin-left: 70px; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. SIDEBAR NAVIGATION
+       ========================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>DisasterConnect</span>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="{{ url_for('coordinator_dashboard') }}"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('create_emergency') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>Create Emergency</span></a>
+      </li>
+      <li class="nav-item active">
+        <a href="{{ url_for('manage_volunteers') }}"><i class="fa-solid fa-users"></i><span>Volunteers</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('assign_task_page') }}"><i class="fa-solid fa-list-check"></i><span>Assign Tasks</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('live_map') }}"><i class="fa-solid fa-map-location-dot"></i><span>Live Map</span></a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a class="btn-logout" href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       2. MAIN CONTENT AREA
+       ========================================================================== -->
+  <main class="main-wrapper">
+
+    <!-- Header -->
+    <header class="dashboard-header">
+      <h1>Volunteer Roster</h1>
+      <p>Search, filter, and dispatch registered relief workforce across field locations</p>
+    </header>
+
+    <!-- Search Bar & Filters -->
+    <section class="filter-card">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search volunteer by name, blood group, or district..." />
+      </div>
+
+      <div class="filter-dropdown">
+        <select>
+          <option value="">All Skills</option>
+          <option value="first-aid">Medical / First Aid</option>
+          <option value="rescue">Search & Rescue</option>
+          <option value="boating">Boating / Swimming</option>
+          <option value="logistics">Food & Logistics</option>
+        </select>
+      </div>
+
+      <div class="filter-dropdown">
+        <select>
+          <option value="">All Statuses</option>
+          <option value="available">Available</option>
+          <option value="deployed">Deployed</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Volunteer Table Card -->
+    <section class="table-card">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Volunteer</th>
+              <th>Skills</th>
+              <th>Status</th>
+              <th>Distance</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            {% for volunteer in volunteers %}
+            <tr>
+              <td>
+                <div class="volunteer-cell">
+                  <div class="v-avatar">{{ volunteer.full_name[:2]|upper }}</div>
+                  <div class="v-meta">
+                    <h4>{{ volunteer.full_name }}</h4>
+                    <p>{{ volunteer.blood_group or 'Blood group not provided' }}</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {{ volunteer.skills or 'General response' }}
+              </td>
+              <td><span class="badge {{ 'badge-info' if volunteer.is_available else 'badge-success' }}">{{ 'Available' if volunteer.is_available else 'Unavailable' }}</span></td>
+              <td>{% if volunteer.distance_km is not none %}<i class="fa-solid fa-location-crosshairs" style="color: var(--primary);"></i> {{ volunteer.distance_km }} km{% else %}Unavailable{% endif %}</td>
+              <td>
+                <div class="action-group" style="justify-content: flex-end;">
+                  <a class="btn-tbl btn-assign" href="{{ url_for('assign_task_page') }}"><i class="fa-solid fa-plus"></i> Assign</a>
+                  <a class="btn-tbl btn-view" href="{{ url_for('view_volunteer', volunteer_id=volunteer.id) }}"><i class="fa-solid fa-eye"></i> View</a>
+                  <form method="POST" action="{{ url_for('remove_volunteer', volunteer_id=volunteer.id) }}" onsubmit="return confirm('Remove this volunteer from the active roster?');"><button class="btn-tbl btn-remove" type="submit"><i class="fa-solid fa-trash"></i> Remove</button></form>
+                </div>
+              </td>
+            </tr>
+
+            {% else %}
+            <tr><td colspan="5">No volunteers match the current roster.</td></tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Table Actions Script -->
+  <script>
+    function removeRow(btn) {
+      if (confirm('Are you sure you want to remove this volunteer from active roster?')) {
+        const row = btn.closest('tr');
+        row.style.opacity = '0';
+        setTimeout(() => row.remove(), 300);
+      }
+    }
+  </script>
+</body>
+</html>

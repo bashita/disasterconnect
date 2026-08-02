@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Coordinator Chat | DisasterConnect</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#0f172a;
+color:white;
+}
+
+.container{
+display:flex;
+height:100vh;
+}
+
+/* LEFT */
+
+.sidebar{
+width:320px;
+background:#111827;
+border-right:1px solid #333;
+overflow-y:auto;
+}
+
+.sidebar h2{
+padding:20px;
+margin:0;
+background:#f59e0b;
+color:black;
+}
+
+.volunteer{
+padding:15px 20px;
+border-bottom:1px solid #2d3748;
+cursor:pointer;
+transition:.3s;
+}
+
+.volunteer:hover{
+background:#1f2937;
+}
+
+.volunteer a{
+text-decoration:none;
+color:white;
+display:block;
+}
+
+.name{
+font-size:17px;
+font-weight:bold;
+}
+
+.status{
+font-size:13px;
+color:#22c55e;
+}
+
+/* RIGHT */
+
+.chat{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+.header{
+background:#111827;
+padding:20px;
+border-bottom:1px solid #333;
+font-size:22px;
+font-weight:bold;
+}
+
+.messages{
+flex:1;
+overflow-y:auto;
+padding:20px;
+background:#0f172a;
+}
+
+.message{
+margin-bottom:20px;
+max-width:70%;
+padding:12px;
+border-radius:12px;
+}
+
+.coordinator{
+margin-left:auto;
+background:#f59e0b;
+color:black;
+}
+
+.volunteer-msg{
+background:#1e293b;
+}
+
+.time{
+font-size:12px;
+margin-top:5px;
+opacity:.7;
+}
+
+form{
+display:flex;
+padding:15px;
+background:#111827;
+}
+
+input{
+flex:1;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:16px;
+}
+
+button{
+margin-left:10px;
+padding:12px 25px;
+border:none;
+background:#f59e0b;
+font-weight:bold;
+cursor:pointer;
+border-radius:8px;
+}
+
+button:hover{
+background:#fbbf24;
+}
+
+.empty{
+padding:50px;
+text-align:center;
+font-size:20px;
+color:#bbb;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT -->
+
+    <div class="sidebar">
+
+        <h2>
+            <i class="fa-solid fa-users"></i>
+            Volunteers
+        </h2>
+
+        {% for volunteer in volunteers %}
+
+        <div class="volunteer">
+
+            <a href="{{ url_for('coordinator_chat', volunteer_id=volunteer.volunteer_id) }}">
+
+                <div class="name">
+
+                    {{ volunteer.full_name }}
+
+                </div>
+
+                <div class="status">
+
+                    ● Volunteer
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="chat">
+
+        {% if selected_volunteer %}
+
+        <div class="header">
+
+            Conversation with Volunteer #{{ selected_volunteer }}
+
+        </div>
+
+        <div class="messages">
+
+            {% for message in messages %}
+
+                {% if message.sender=="Coordinator" %}
+
+                    <div class="message coordinator">
+
+                        {{ message.message }}
+
+                        <div class="time">
+
+                            {{ message.sent_at }}
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="message volunteer-msg">
+
+                        {{ message.message }}
+
+                        <div class="time">
+
+                            {{ message.sent_at }}
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+
+        <form method="POST"
+              action="{{ url_for('coordinator_send_message') }}">
+
+            <input type="hidden"
+                   name="volunteer_id"
+                   value="{{ selected_volunteer }}">
+
+            <input
+                type="text"
+                name="message"
+                placeholder="Type message..."
+                required>
+
+            <button>
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+            </button>
+
+        </form>
+
+        {% else %}
+
+        <div class="empty">
+
+            <i class="fa-solid fa-comments"
+            style="font-size:60px;color:#f59e0b;"></i>
+
+            <br><br>
+
+            Select a volunteer to start chatting.
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

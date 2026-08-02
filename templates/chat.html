@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volunteer Field Chat - DisasterConnect India</title>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ==========================================================================
+       1. CORE THEME & RESET
+       ========================================================================== */
+    :root {
+      --primary: #F59E0B;
+      --primary-hover: #FBBF24;
+      --primary-dark: #D97706;
+      --bg-dark: #0B1120;
+      --sidebar-bg: rgba(15, 23, 42, 0.75);
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(245, 158, 11, 0.2);
+      --text-main: #F8FAFC;
+      --text-muted: #CBD5E1;
+      --input-bg: rgba(15, 23, 42, 0.7);
+      --danger: #EF4444;
+      --success: #10B981;
+      --bubble-incoming: rgba(30, 41, 59, 0.85);
+      --bubble-outgoing: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+      radial-gradient(circle at 85% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 45%),
+      radial-gradient(circle at 15% 80%, rgba(59, 130, 246, 0.04) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 3px; }
+
+    /* ==========================================================================
+       2. CENTERED CHAT CONTAINER
+       ========================================================================== */
+    .main-wrapper {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    .chat-canvas {
+      width: 100%;
+      max-width: 900px;
+      height: 90vh;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Header */
+    .canvas-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .coordinator-details {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .coordinator-meta h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      color: var(--text-main);
+    }
+
+    .coordinator-meta p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .status-pill {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--success);
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    /* Messages Thread */
+    .messages-container {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .date-divider {
+      text-align: center;
+      margin: 0.5rem 0;
+      position: relative;
+    }
+
+    .date-divider span {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      padding: 0.25rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Message Bubbles */
+    .message-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 70%;
+    }
+
+    .message-row.incoming { align-self: flex-start; }
+    .message-row.outgoing { align-self: flex-end; }
+
+    .message-bubble {
+      padding: 0.85rem 1.1rem;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .incoming .message-bubble {
+      background: var(--bubble-incoming);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom-left-radius: 4px;
+    }
+
+    .outgoing .message-bubble {
+      background: var(--bubble-outgoing);
+      color: var(--bg-dark);
+      font-weight: 500;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-meta {
+      font-size: 0.7rem;
+      margin-top: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .incoming .message-meta {
+      color: var(--text-muted);
+      align-self: flex-start;
+    }
+
+    .outgoing .message-meta {
+      color: rgba(248, 250, 252, 0.7);
+      align-self: flex-end;
+    }
+
+    /* Quick Replies */
+    .quick-replies {
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      background: rgba(15, 23, 42, 0.3);
+      border-top: 1px solid rgba(245, 158, 11, 0.1);
+    }
+
+    .reply-pill {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: var(--primary);
+      padding: 0.4rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .reply-pill:hover {
+      background: var(--primary);
+      color: var(--bg-dark);
+    }
+
+    /* Input Bar */
+    .chat-input-area {
+      padding: 1rem 1.5rem;
+      background: rgba(15, 23, 42, 0.7);
+      border-top: 1px solid rgba(245, 158, 11, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .input-box-wrapper { flex: 1; }
+
+    .input-box-wrapper input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      color: var(--text-main);
+      outline: none;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .input-box-wrapper input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-send {
+      padding: 0.85rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+      transition: all 0.3s ease;
+    }
+
+    .btn-dashboard {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .btn-dashboard:hover {
+      background: var(--primary);
+      color: var(--bg-dark);
+      border-color: var(--primary);
+    }
+
+    .btn-send:hover {
+      background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .main-wrapper { padding: 0.5rem; }
+      .chat-canvas { height: 98vh; }
+      .message-row { max-width: 85%; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="main-wrapper">
+    <section class="chat-canvas">
+      
+      <!-- Canvas Header -->
+      <div class="canvas-header">
+        <div class="coordinator-details">
+          <div class="avatar">HQ</div>
+          <div class="coordinator-meta">
+            <h3>Central Dispatch Desk</h3>
+            <p><i class="fa-solid fa-shield-cat" style="color: var(--primary);"></i> Cuttack District Emergency Operation Center</p>
+          </div>
+        </div>
+
+        <div class="status-pill">
+          <div class="status-dot"></div> Connected Live
+        </div>
+      </div>
+
+      <!-- Messages Thread Area -->
+      <div class="messages-container" id="chatThread">
+
+        {% for msg in messages %}
+            {% if msg.sender == "Coordinator" %}
+                <div class="message-row incoming">
+                    <div class="message-bubble">
+                    {{ msg.message }}
+                    </div>
+                    <div class="message-meta">
+                        <i class="fa-regular fa-clock"></i>
+                        {{ msg.sent_at.strftime("%I:%M %p") }}
+                        • Dispatch Officer
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="message-row outgoing">
+                    <div class="message-bubble">
+                        {{ msg.message }}
+                    </div>
+
+                    <div class="message-meta">
+                        {{ msg.sent_at.strftime("%I:%M %p") }}
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Input Form -->
+      <form class="chat-input-area" action="/chat" method="POST">
+        <div class="input-box-wrapper">
+          <input type="text" name="message" placeholder="Send field update to Coordinator HQ..." required />
+        </div>
+        <button type="submit" class="btn-send">
+          <i class="fa-solid fa-paper-plane"></i> Send
+        </button>
+
+         <a class="btn-dashboard" href="{{ url_for('volunteer_dashboard') }}">
+          <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </a>
+
+      </form>
+
+
+
+    </section>
+  </main>
+</body>
+</html>

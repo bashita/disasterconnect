@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Volunteer Profile | DisasterConnect</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='volunteer_dashboard.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <h2>DisasterConnect</h2>
+
+        <ul>
+
+            <li>
+                <a href="{{ url_for('volunteer_dashboard') }}">
+                    <i class="fa-solid fa-house"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a class="active" href="{{ url_for('volunteer_profile') }}">
+                    <i class="fa-solid fa-user"></i>
+                    My Profile
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('task_details', task_id=1) }}">
+                    <i class="fa-solid fa-list-check"></i>
+                    Tasks
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('notifications') }}">
+                    <i class="fa-solid fa-bell"></i>
+                    Notifications
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('chat') }}">
+                    <i class="fa-solid fa-comments"></i>
+                    Chat
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('logout') }}">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="main">
+
+        <header>
+
+            <h1>
+                Volunteer Profile
+            </h1>
+
+            <button class="sos">
+                SOS
+            </button>
+
+        </header>
+
+        <!-- Profile Card -->
+
+        <section class="panel">
+
+            <div style="display:flex;align-items:center;gap:30px;flex-wrap:wrap;">
+
+                <img src="../images/profile.png"
+                width="170"
+                height="170"
+                style="border-radius:50%;
+                border:4px solid #F59E0B;
+                object-fit:cover;">
+
+                <div>
+
+                    <h2 style="color:#F59E0B;">
+                        {{ name }}
+                    </h2>
+
+                    <p>
+                        <i class="fa-solid fa-envelope"></i>
+                        {{ emailid }}
+                    </p>
+
+                    <p>
+                        <i class="fa-solid fa-phone"></i>
+                        {{ mobileno }}
+                    </p>
+
+                    <p>
+                        <i class="fa-solid fa-location-dot"></i>
+                        {{ city }}
+                    </p>
+
+                    <p>
+                        <i class="fa-solid fa-award"></i>
+                        Verified Volunteer
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <br>
+
+        <!-- Personal Information -->
+
+        <section class="panel">
+
+            <h2>Personal Information</h2>
+
+            <table>
+
+                <tr>
+
+                    <th>Full Name</th>
+
+                    <td>{{ name }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Age</th>
+
+                    <td>{{ age }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Gender</th>
+
+                    <td>{{ gender }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Blood Group</th>
+
+                    <td>{{ bloodgroup }}</td>
+
+                </tr>
+
+                <tr>
+
+                    <th>Emergency Contact</th>
+
+                    <td>{{ contactno }}</td>
+
+                </tr>
+
+            </table>
+
+        </section>
+
+        <br>
+
+        <!-- Skills -->
+
+        <section class="panel">
+
+            <h2>Volunteer Skills</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    {{ skills }}
+                </div>
+
+            </div>
+
+        </section>
+
+        <br>
+
+        <!-- Certificates -->
+
+        <section class="panel">
+
+            <h2>Certificates</h2>
+
+            <table>
+
+                <tr>
+
+                    <th>Certificate</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+                <tr>
+
+                    <td>{{ certificate }}</td>
+
+                    <td style="color:lime;">
+                        Verified
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Disaster Management</td>
+
+                    <td style="color:lime;">
+                        Verified
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </section>
+
+        <br>
+
+        <!-- Availability -->
+
+        <section class="panel">
+
+            <h2>Availability</h2>
+
+            <table>
+
+                <tr>
+                    <td>{{ availability }}</td>
+                </tr>
+
+
+            </table>
+
+        </section>
+
+        <br>
+
+        <!-- Statistics -->
+
+        <section class="cards">
+
+            <div class="card">
+
+                <h3>Completed Tasks</h3>
+
+                <p>{{ completed_count }}</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Total Hours</h3>
+
+                <p>{{ total_hours }}</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Current Rank</h3>
+
+                <p>#{{ leaderboard_rank }}</p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

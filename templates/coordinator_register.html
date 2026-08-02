@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer Registration - DisasterConnect India</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f5f9ff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .register-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #1e3c72;
+        }
+
+        .logo-container i {
+            font-size: 2rem;
+            color: #d9534f;
+        }
+
+        .logo-container h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .alert-error {
+            background: #fde8e8;
+            color: #c81e1e;
+            border: 1px solid #f8b4b4;
+        }
+
+        .alert-success {
+            background: #def7ec;
+            color: #03543f;
+            border: 1px solid #84e1bc;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper input, 
+        .input-wrapper select, 
+        .input-wrapper textarea {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-wrapper input:focus, 
+        .input-wrapper select:focus, 
+        .input-wrapper textarea:focus {
+            border-color: #1e3c72;
+        }
+
+        .location-btn {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+            margin-top: 5px;
+        }
+
+        .location-btn:hover {
+            background: #1e3c72;
+        }
+
+        .location-status {
+            font-size: 0.8rem;
+            color: #28a745;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: #1e3c72;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 25px;
+            grid-column: span 2;
+        }
+
+        .submit-btn:hover {
+            background: #162d56;
+        }
+
+        .card-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .card-footer a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .card-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .submit-btn {
+                grid-column: span 1;
+            }
+            .register-card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-card">
+        <a href="/" class="logo-container">
+            <i class="fa-solid fa-hand-holding-hand"></i>
+            <h2>DisasterConnect</h2>
+        </a>
+        <p class="subtitle">Join as a Volunteer to support immediate disaster response</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'error' if category == 'danger' else category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('volunteer_register') }}" method="POST">
+            <div class="form-grid">
+                
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="full_name" name="full_name" placeholder="John Doe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" id="phone" name="phone" placeholder="+91 9876543210" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="blood_group">Blood Group</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-droplet"></i>
+                        <select id="blood_group" name="blood_group" required>
+                            <option value="" disabled selected>Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="emergency_contact">Emergency Contact Phone</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-phone-volume"></i>
+                        <input type="tel" id="emergency_contact" name="emergency_contact" placeholder="+91 9123456789" required>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="skills">Key Skills / Expertise (Comma Separated)</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        <input type="text" id="skills" name="skills" placeholder="First Aid, Medical Assistance, Rescue Operation, Driving, Logistics" required>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Current Location Coordinates</label>
+                    <button type="button" class="location-btn" onclick="getLocation()">
+                        <i class="fa-solid fa-location-crosshairs"></i> Get Current GPS Location
+                    </button>
+                    <div id="location-text" class="location-status"></div>
+
+                    <input type="hidden" id="latitude" name="latitude" value="13.0827">
+                    <input type="hidden" id="longitude" name="longitude" value="80.2707">
+                </div>
+
+                <button type="submit" class="submit-btn">Complete Registration</button>
+            </div>
+        </form>
+
+        <div class="card-footer">
+            Already registered? <a href="{{ url_for('volunteer_login') }}">Login as Volunteer</a>
+        </div>
+    </div>
+
+    <script>
+        function getLocation() {
+            const locText = document.getElementById('location-text');
+            if (navigator.geolocation) {
+                locText.style.color = '#1e3c72';
+                locText.innerText = "Fetching coordinates...";
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        document.getElementById('latitude').value = position.coords.latitude;
+                        document.getElementById('longitude').value = position.coords.longitude;
+                        locText.style.color = '#28a745';
+                        locText.innerText = `Location set: Lat ${position.coords.latitude.toFixed(4)}, Long ${position.coords.longitude.toFixed(4)}`;
+                    },
+                    (error) => {
+                        locText.style.color = '#dc3545';
+                        locText.innerText = "Unable to fetch location automatically. Default fallback location assigned.";
+                    }
+                );
+            } else {
+                locText.style.color = '#dc3545';
+                locText.innerText = "Geolocation is not supported by this browser.";
+            }
+        }
+    </script>
+</body>
+</html>

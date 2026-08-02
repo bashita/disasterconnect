@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Assignment - DisasterConnect India</title>
+  <style>
+    :root { --primary: #F59E0B; --bg-dark: #0B1120; --card-bg: rgba(255,255,255,.04); --card-border: rgba(245,158,11,.2); --text-main: #F8FAFC; }
+    body { font-family: Inter, sans-serif; background: var(--bg-dark); color: var(--text-main); padding: 2rem; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .ai-box { background: rgba(245,158,11,.1); border-left: 4px solid var(--primary); padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+    .btn { background: var(--primary); color: #000; padding: .75rem 1.5rem; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; margin-right: .5rem; }
+    input, textarea, select { box-sizing: border-box; display: block; width: 100%; margin: .5rem 0 1rem; padding: .7rem; }
+    a { color: var(--primary); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <a href="/coordinator/dashboard">Back to Dashboard</a>
+  <h1>Task Assignment</h1>
+  <div class="card">
+    <h2>Describe the task</h2>
+    {% if selected_emergency and volunteers %}
+    <form method="GET" action="{{ url_for('assign_task_page') }}">
+      <label for="title">Task title</label>
+      <input id="title" name="title" value="{{ title }}" required>
+      <label for="description">Task description <small>(optional)</small></label>
+      <textarea id="description" name="description" rows="4">{{ description }}</textarea>
+      <button type="submit" name="analyze" value="1" class="btn">Analyze and Rank Volunteers</button>
+    </form>
+    {% if ai_recommendation %}
+    <div class="ai-box">
+      <strong>{{ 'Gemini ranked volunteer list' if ai_recommendation.source == 'gemini' else 'Backend ranked volunteer list' }}</strong>
+      {% if ai_recommendation.error %}<p>{{ ai_recommendation.error }}</p>{% endif %}
+      {% if ai_recommendation.requirements %}
+      <p><strong>{{ ai_recommendation.requirements.category }}</strong> | Skills: {{ ai_recommendation.requirements.required_skills|join(', ') or 'General response' }} | Urgency: {{ ai_recommendation.requirements.urgency }} | Duration: {{ ai_recommendation.requirements.duration }}</p>
+      {% endif %}
+      {% if ai_recommendation.reason %}<p>{{ ai_recommendation.reason }}{% if ai_recommendation.confidence %} (confidence: {{ (ai_recommendation.confidence * 100)|round|int }}%){% endif %}</p>{% endif %}
+      {% if ai_recommendation.volunteers %}
+      <ol>
+        {% for volunteer in ai_recommendation.volunteers %}
+        <li><strong>{{ volunteer.full_name }}</strong> - score {{ volunteer.match_score|round(1) }}; skills: {{ volunteer.matching_skills|join(', ') or 'none' }}; {% if volunteer.distance_km is not none %}{{ volunteer.distance_km }} km away{% else %}location unavailable{% endif %}; {{ volunteer.active_tasks }} active, {{ volunteer.completed_tasks }} completed</li>
+        {% endfor %}
+      </ol>
+      {% else %}<p>No available volunteers were returned.</p>{% endif %}
+    </div>
+    <form method="POST" action="{{ url_for('submit_task_assignment') }}">
+      <input type="hidden" name="emergency_id" value="{{ selected_emergency.id }}">
+      <input type="hidden" name="title" value="{{ title }}">
+      <input type="hidden" name="description" value="{{ description }}">
+      <label for="volunteer_id">Confirm volunteer</label>
+      <select id="volunteer_id" name="volunteer_id" required>
+        {% for volunteer in ai_recommendation.volunteers %}
+        <option value="{{ volunteer.id }}" {% if loop.first %}selected{% endif %}>{{ volunteer.full_name }} - score {{ volunteer.match_score|round(1) }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn">Assign Selected Volunteer</button>
+      <button type="submit" name="assignment_mode" value="automatic" class="btn">Assign Automatically</button>
+    </form>
+    {% else %}
+      <p>Enter the task details. The latest active emergency supplies the location context automatically.</p>
+    {% endif %}
+    {% elif not selected_emergency %}
+      <p>No active emergencies are available for task assignment.</p>
+    {% else %}
+      <p>No available volunteers are registered.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

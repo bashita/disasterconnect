@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volunteer Registration - DisasterConnect India</title>
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ==========================================================================
+       1. CORE RESET & DARK + GOLD THEME
+       ========================================================================== */
+    :root {
+      --primary: #F59E0B;
+      --primary-hover: #FBBF24;
+      --primary-dark: #D97706;
+      --bg-dark: #0B1120;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(245, 158, 11, 0.25);
+      --card-glow: rgba(245, 158, 11, 0.12);
+      --text-main: #F8FAFC;
+      --text-muted: #CBD5E1;
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --input-border: rgba(245, 158, 11, 0.2);
+      --danger: #EF4444;
+      --success: #10B981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(217, 119, 6, 0.06) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+      border-radius: 4px;
+    }
+    ::selection {
+      background: var(--primary);
+      color: var(--bg-dark);
+    }
+
+    /* ==========================================================================
+       2. GLASS CONTAINER & HEADER
+       ========================================================================== */
+    .register-container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px var(--card-glow);
+      padding: 2.5rem;
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      margin-bottom: 0.75rem;
+    }
+
+    .brand-logo i {
+      color: var(--primary);
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
+    }
+
+    .brand-header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ==========================================================================
+       3. FORM STRUCTURE & GRID
+       ========================================================================== */
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 1.5rem 0 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+      padding-bottom: 0.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i.input-icon {
+      position: absolute;
+      left: 1rem;
+      color: var(--primary);
+      font-size: 0.95rem;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23F59E0B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    select option {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    /* Geo-location Button Styling */
+    .geo-btn {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      margin-left: auto;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .geo-btn:hover {
+      background: var(--primary);
+      color: var(--bg-dark);
+    }
+
+    /* Password Toggle Icon */
+    .toggle-password {
+      position: absolute;
+      right: 1rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-password:hover {
+      color: var(--primary);
+    }
+
+    /* ==========================================================================
+       4. UPLOAD CERTIFICATE AREA
+       ========================================================================== */
+    .upload-box {
+      border: 2px dashed var(--input-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      background: var(--input-bg);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .upload-box:hover {
+      border-color: var(--primary);
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .upload-box i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .upload-box:hover i {
+      transform: translateY(-4px);
+    }
+
+    .upload-box p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .upload-box input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       5. BUTTONS & ACTIONS
+       ========================================================================== */
+    .btn-register {
+      width: 100%;
+      margin-top: 2rem;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-register:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
+      background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+    }
+
+    .form-footer {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .form-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .form-footer a:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       6. RESPONSIVE DESIGN & ANIMATIONS
+       ========================================================================== */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+      .register-container {
+        padding: 1.5rem;
+      }
+      .form-footer {
+        flex-direction: column;
+        gap: 0.8rem;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    
+    <!-- Brand Header -->
+    <div class="brand-header">
+      <a href="landing.html" class="brand-logo">
+        <i class="fa-solid fa-shield-halved"></i> DisasterConnect India
+      </a>
+      <h1>Volunteer Registration</h1>
+      <p>Join India's AI-driven disaster response and community relief network.</p>
+    </div>
+
+    <!-- Registration Form -->
+    <form id="volunteerRegisterForm" action="{{ url_for('register') }}" method="POST">
+      
+      <!-- Section 1: Personal Details -->
+      <div class="section-title">
+        <i class="fa-solid fa-user"></i> Personal Information
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="fullName">Full Name (As per Government ID)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-signature input-icon"></i>
+            <input type="text" id="fullName" name="fullName" placeholder="e.g. Aarav Sharma" required />
+          </div>
+        </div>
+
+        <!-- NEW FIELD: Gender -->
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-venus-mars input-icon"></i>
+            <select id="gender" name="gender" required>
+              <option value="" disabled selected>Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="non-binary">Non-Binary</option>
+              <option value="prefer-not-to-say">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- NEW FIELD: Age -->
+        <div class="form-group">
+          <label for="age">Age (Years)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-cake-candles input-icon"></i>
+            <input type="number" id="age" name="age" min="18" max="80" placeholder="e.g. 25" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-envelope input-icon"></i>
+            <input type="email" id="email" name="email" placeholder="aarav@example.com" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Mobile Number (+91)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-phone input-icon"></i>
+            <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" pattern="[+0-9\s]{10,14}" required />
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" placeholder="••••••••" required />
+            <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Location & Coordinates -->
+      <div class="section-title">
+        <i class="fa-solid fa-map-location-dot"></i> Location & GPS Coordinates
+        <button type="button" class="geo-btn" id="btnGetLocation">
+          <i class="fa-solid fa-crosshairs"></i> Detect GPS
+        </button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="state">State / Union Territory</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-landmark input-icon"></i>
+            <select id="state" name="state" required>
+              <option value="" disabled selected>Select State/UT</option>
+              <option value="Andhra Pradesh">Andhra Pradesh</option>
+              <option value="Assam">Assam</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Delhi">Delhi NCR</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Odisha">Odisha</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Other">Other State / UT</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="location">District / City & Pincode</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-location-dot input-icon"></i>
+            <input type="text" id="location" name="location" placeholder="e.g. Cuttack, 753001" required />
+          </div>
+        </div>
+
+        <!-- NEW FIELD: Latitude -->
+        <div class="form-group">
+          <label for="latitude">Latitude</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-compass input-icon"></i>
+            <input type="number" step="any" id="latitude" name="latitude" placeholder="e.g. 20.4625" required />
+          </div>
+        </div>
+
+        <!-- NEW FIELD: Longitude -->
+        <div class="form-group">
+          <label for="longitude">Longitude</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-compass input-icon"></i>
+            <input type="number" step="any" id="longitude" name="longitude" placeholder="e.g. 85.8828" required />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Volunteer Capabilities & Status -->
+      <div class="section-title">
+        <i class="fa-solid fa-hand-holding-hand"></i> Volunteer Profile & Availability
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="skills">Primary Relief Skill</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-kit-medical input-icon"></i>
+            <select id="skills" name="skills" required>
+              <option value="" disabled selected>Select primary capability</option>
+              <option value="first-aid">First Aid & Medical Assistance</option>
+              <option value="search-rescue">Flood / Structural Search & Rescue</option>
+              <option value="food-distribution">Food & Rations Logistics</option>
+              <option value="shelter-management">Relief Camp / Shelter Mgmt</option>
+              <option value="ham-radio">HAM Radio & Telecom Operations</option>
+              <option value="swimming-boating">Boating / Heavy Swimming</option>
+              <option value="general">General Field Volunteer</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bloodGroup">Blood Group</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-droplet input-icon"></i>
+            <select id="bloodGroup" name="bloodGroup" required>
+              <option value="" disabled selected>Select blood type</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="Bombay">Bombay Blood Group (Rare)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="availability">Deployment Availability</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-clock input-icon"></i>
+            <select id="availability" name="availability" required>
+              <option value="" disabled selected>Select availability</option>
+              <option value="24-7">24/7 Rapid Emergency Response</option>
+              <option value="weekends">Weekends Only</option>
+              <option value="evenings">Evenings Only</option>
+              <option value="disaster-only">Major Red-Alert Operations Only</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- NEW FIELD: Is Available (0 or 1 Binary Indicator) -->
+        <div class="form-group">
+          <label for="is_available">Active Readiness Status</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-toggle-on input-icon"></i>
+            <select id="is_available" name="is_available" required>
+              <option value="1" selected>Available for Dispatch (1)</option>
+              <option value="0">Currently Unavailable / On Standby (0)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="emergencyContact">Emergency Contact (Kin)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-address-book input-icon"></i>
+            <input type="tel" id="emergencyContact" name="emergencyContact" placeholder="+91 Emergency phone" required />
+          </div>
+        </div>
+
+        <!-- Certifications Upload -->
+        <div class="form-group full-width">
+          <label>Government / NGO Certification (NDRF, Civil Defence, Red Cross, NCC, NSS - Optional)</label>
+          <div class="upload-box" id="uploadBox">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <p id="uploadText">Drag and drop certificate PDF or JPG/PNG here, or click to browse</p>
+            <input type="file" id="certificate" name="certificate" accept=".pdf,image/*" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-register">
+        <i class="fa-solid fa-user-plus"></i> Register as Relief Volunteer
+      </button>
+
+      <!-- Links -->
+      <div class="form-footer">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+        <div>
+          Already registered? <a href="volunteer-login.html">Login here</a>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Micro Interaction Script -->
+  <script>
+    // Password Visibility Toggle
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+
+    // File Upload Name Display
+    const fileInput = document.getElementById('certificate');
+    const uploadText = document.getElementById('uploadText');
+
+    fileInput.addEventListener('change', function () {
+      if (this.files && this.files[0]) {
+        uploadText.textContent = `Attached: ${this.files[0].name}`;
+        uploadText.style.color = 'var(--primary)';
+      }
+    });
+
+    // Auto GPS Location Detection
+    const btnGetLocation = document.getElementById('btnGetLocation');
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
+
+    btnGetLocation.addEventListener('click', function () {
+      if (navigator.geolocation) {
+        btnGetLocation.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Locating...`;
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            latInput.value = position.coords.latitude.toFixed(6);
+            lngInput.value = position.coords.longitude.toFixed(6);
+            btnGetLocation.innerHTML = `<i class="fa-solid fa-check"></i> Detected`;
+            btnGetLocation.style.borderColor = 'var(--success)';
+            btnGetLocation.style.color = 'var(--success)';
+          },
+          (error) => {
+            alert('Unable to retrieve location. Please grant location permissions or enter coordinates manually.');
+            btnGetLocation.innerHTML = `<i class="fa-solid fa-crosshairs"></i> Detect GPS`;
+          }
+        );
+      } else {
+        alert('Geolocation is not supported by your browser.');
+      }
+    });
+  </script>
+</body>
+</html>

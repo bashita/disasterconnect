@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About | DisasterConnect</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav>
+
+        <div class="logo">
+            <i class="fa-solid fa-shield-heart"></i>
+            DisasterConnect
+        </div>
+
+        <ul>
+
+            <li><a href="{{url_for('landing_page')}}">Home</a></li>
+
+            <li><a class="active" href="{{url_for('about')}}">About</a></li>
+
+            <li><a href="{{url_for('contact')}}">Contact</a></li>
+
+        </ul>
+
+    </nav>
+
+    <!-- Hero -->
+
+    <section class="hero">
+
+        <h1>About DisasterConnect</h1>
+
+        <p>
+            An AI-powered Disaster Response Management System
+            that connects volunteers, coordinators, and emergency
+            response teams to save lives faster.
+        </p>
+
+    </section>
+
+    <!-- Mission -->
+
+    <section class="section">
+
+        <div class="card">
+
+            <i class="fa-solid fa-bullseye"></i>
+
+            <h2>Our Mission</h2>
+
+            <p>
+
+                Our mission is to improve disaster response by
+                connecting volunteers with coordinators using
+                intelligent task allocation, real-time tracking,
+                and instant communication.
+
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <i class="fa-solid fa-eye"></i>
+
+            <h2>Our Vision</h2>
+
+            <p>
+
+                To build a safer world where technology enables
+                rapid disaster response, reducing casualties and
+                ensuring timely humanitarian assistance.
+
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- Features -->
+
+    <section class="features">
+
+        <h2>Why DisasterConnect?</h2>
+
+        <div class="feature-grid">
+
+            <div class="feature">
+
+                <i class="fa-solid fa-users"></i>
+
+                <h3>Volunteer Management</h3>
+
+                <p>
+                    Register, verify and manage volunteers efficiently.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                <h3>Live Tracking</h3>
+
+                <p>
+                    Track volunteers and emergencies using live maps.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-robot"></i>
+
+                <h3>AI Task Assignment</h3>
+
+                <p>
+                    Smart volunteer allocation based on skills and location.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-comments"></i>
+
+                <h3>Instant Communication</h3>
+
+                <p>
+                    Secure coordinator and volunteer messaging.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <h3>Analytics</h3>
+
+                <p>
+                    Real-time reports and performance monitoring.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <h3>Emergency Alerts</h3>
+
+                <p>
+                    Receive instant alerts for nearby emergencies.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Workflow -->
+
+    <section class="workflow">
+
+        <h2>How It Works</h2>
+
+        <div class="steps">
+
+            <div class="step">
+                <i class="fa-solid fa-user-plus"></i>
+                <h3>Register</h3>
+                <p>Create your volunteer account.</p>
+            </div>
+
+            <div class="step">
+                <i class="fa-solid fa-id-card"></i>
+                <h3>Receive tasks</h3>
+                <p>Coordinator assigns tasks.</p>
+            </div>
+
+            <div class="step">
+                <i class="fa-solid fa-bell"></i>
+                <h3>Receive Alerts</h3>
+                <p>Get emergency notifications instantly.</p>
+            </div>
+
+            <div class="step">
+                <i class="fa-solid fa-comments"></i>
+                <h3>Communication</h3>
+                <p>Communicate with coordinator via chat.</p>
+            </div>
+
+            <div class="step">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+                <h3>Help People</h3>
+                <p>Complete assigned rescue missions.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Statistics -->
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <h2>50+</h2>
+
+            <p>Registered Volunteers</p>
+
+        </div>
+
+        <div class="stat">
+
+            <h2>300+</h2>
+
+            <p>Emergencies Managed</p>
+
+        </div>
+
+        <div class="stat">
+
+            <h2>98%</h2>
+
+            <p>Successful Response Rate</p>
+
+        </div>
+
+        <div class="stat">
+
+            <h2>24/7</h2>
+
+            <p>Emergency Support</p>
+
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+
+            © 2026 DisasterConnect |
+            AI Powered Disaster Response Management System
+
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

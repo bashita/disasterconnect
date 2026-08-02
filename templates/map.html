@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Map - DisasterConnect India</title>
+
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Leaflet CSS for Map Rendering -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    /* ==========================================================================
+       1. CORE THEME & RESET
+       ========================================================================== */
+    :root {
+      --primary: #F59E0B;
+      --primary-hover: #FBBF24;
+      --primary-dark: #D97706;
+      --bg-dark: #0B1120;
+      --sidebar-bg: rgba(15, 23, 42, 0.75);
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(245, 158, 11, 0.2);
+      --text-main: #F8FAFC;
+      --text-muted: #CBD5E1;
+      --danger: #EF4444;
+      --success: #10B981;
+      --hospital: #F59E0B;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 85% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 15% 80%, rgba(59, 130, 246, 0.04) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 3px; }
+
+    /* ==========================================================================
+       2. SIDEBAR NAVIGATION
+       ========================================================================== */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 1000;
+    }
+
+    .sidebar-brand {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .sidebar-brand i { color: var(--primary); }
+
+    .nav-menu {
+      list-style: none;
+      padding: 1.5rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active a, .nav-item a:hover {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .sidebar-footer {
+      padding: 1.25rem;
+      border-top: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .btn-logout {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: 0.3s;
+    }
+
+    .btn-logout:hover { background: var(--danger); color: #fff; }
+
+    /* ==========================================================================
+       3. MAIN CONTENT & MAP CONTAINER
+       ========================================================================== */
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .map-header {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 500;
+      background: rgba(11, 17, 32, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    }
+
+    .map-header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFF 0%, var(--primary-hover) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .map-header p {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* Floating Legend Container */
+    .map-legend {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 500;
+      background: rgba(11, 17, 32, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      padding: 1rem 1.25rem;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    }
+
+    .legend-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 8px currentColor;
+    }
+    .dot-emergency { background-color: var(--danger); color: var(--danger); }
+    .dot-volunteer { background-color: var(--success); color: var(--success); }
+    .dot-hospital { background-color: var(--hospital); color: var(--hospital); }
+
+    /* Map Element */
+    #map {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background: var(--bg-dark);
+    }
+
+    /* ==========================================================================
+       4. CUSTOM MAP MARKERS & POPUPS
+       ========================================================================== */
+    .custom-marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 15px currentColor;
+    }
+
+    .marker-emergency { background: rgba(239, 68, 68, 0.85); color: #EF4444; }
+    .marker-volunteer { background: rgba(16, 185, 129, 0.85); color: #10B981; }
+    .marker-hospital  { background: rgba(245, 158, 11, 0.85); color: #F59E0B; }
+
+    /* Customizing Leaflet Dark Popups */
+    .leaflet-popup-content-wrapper {
+      background: rgba(15, 23, 42, 0.95) !important;
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      color: var(--text-main) !important;
+      border-radius: 12px !important;
+      padding: 0.25rem !important;
+    }
+
+    .leaflet-popup-tip {
+      background: rgba(15, 23, 42, 0.95) !important;
+    }
+
+    .popup-content h4 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .popup-content p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .popup-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar { width: 70px; }
+      .sidebar-brand span, .nav-item span, .sidebar-footer span { display: none; }
+      .main-wrapper { margin-left: 70px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. SIDEBAR NAVIGATION
+       ========================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>DisasterConnect</span>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="{{ url_for('coordinator_dashboard') }}"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('create_emergency') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>Create Emergency</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('manage_volunteers') }}"><i class="fa-solid fa-users"></i><span>Volunteers</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('assign_task_page') }}"><i class="fa-solid fa-list-check"></i><span>Assign Tasks</span></a>
+      </li>
+      <li class="nav-item active">
+        <a href="{{ url_for('live_map') }}"><i class="fa-solid fa-map-location-dot"></i><span>Live Map</span></a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a class="btn-logout" href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       2. MAIN MAP VIEWPORT
+       ========================================================================== -->
+  <main class="main-wrapper">
+
+    <!-- Floating Top Header -->
+    <div class="map-header">
+      <h1>Live Operations Map</h1>
+      <p>Real-time location telemetry for active incidents, personnel, & medical facilities</p>
+    </div>
+
+    <!-- Floating Map Legend -->
+    <div class="map-legend">
+      <div class="legend-title">Live Indicators</div>
+      <div class="legend-item"><span class="dot dot-emergency"></span> 🔴 Active Emergency</div>
+      <div class="legend-item"><span class="dot dot-volunteer"></span> 🟢 Active Volunteer</div>
+      <div class="legend-item"><span class="dot dot-hospital"></span> 🟡 Medical / Hospital</div>
+    </div>
+
+    <!-- Leaflet Map Div Container -->
+    <div id="map"></div>
+    <div id="empty-map-message" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:500; padding:1rem 1.25rem; background:rgba(11,17,32,.9); border:1px solid var(--card-border); border-radius:10px; color:var(--text-main);">No saved coordinates yet. Add emergency coordinates and update volunteer GPS location.</div>
+
+  </main>
+
+  <!-- Leaflet JS Engine -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Map Initialization & Markers Script -->
+  <script>
+    // Initialize Map centered around India coordinates (default Cuttack / Odisha view)
+    const map = L.map('map', { zoomControl: false }).setView([20.4625, 85.8828], 12);
+
+    // Add Zoom Control to Bottom Right
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // Dark Mode Map Tile Provider (CartoDB Dark Matter)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+    }).addTo(map);
+
+    // Helper function to create custom DivIcons
+    function createCustomMarker(iconClass, bgClass) {
+      return L.divIcon({
+        className: 'custom-icon-wrapper',
+        html: `<div class="custom-marker ${bgClass}"><i class="${iconClass}"></i></div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 18]
+      });
+    }
+
+    const markerLayer = L.layerGroup().addTo(map);
+    let hasFittedMarkers = false;
+
+    function loadLiveLocations() {
+      fetch('{{ url_for("map_data_api") }}')
+        .then(response => response.json())
+        .then(data => {
+          markerLayer.clearLayers();
+          const points = [];
+
+          data.emergencies.forEach(emergency => {
+            const point = [emergency.latitude, emergency.longitude];
+            points.push(point);
+            L.marker(point, { icon: createCustomMarker('fa-solid fa-triangle-exclamation', 'marker-emergency') })
+              .addTo(markerLayer)
+              .bindPopup(`<div class="popup-content"><h4>#EM-${String(emergency.id).padStart(4, '0')} - ${emergency.title}</h4><p>${emergency.location_name}</p><span class="popup-badge">${emergency.severity} - ${emergency.status}</span></div>`);
+          });
+
+          data.volunteers.forEach(volunteer => {
+            const point = [volunteer.latitude, volunteer.longitude];
+            points.push(point);
+            L.marker(point, { icon: createCustomMarker('fa-solid fa-user-shield', 'marker-volunteer') })
+              .addTo(markerLayer)
+              .bindPopup(`<div class="popup-content"><h4>${volunteer.full_name}</h4><p>Volunteer live location</p><span class="popup-badge">${volunteer.is_available ? 'Available' : 'Unavailable'}</span></div>`);
+          });
+
+          if (points.length && !hasFittedMarkers) {
+            map.fitBounds(points, { padding: [40, 40], maxZoom: 12 });
+            hasFittedMarkers = true;
+          }
+          document.getElementById('empty-map-message').style.display = points.length ? 'none' : 'block';
+        })
+        .catch(() => console.error('Unable to load live map data'));
+    }
+
+    loadLiveLocations();
+    setInterval(loadLiveLocations, 15000);
+  </script>
+</body>
+</html>

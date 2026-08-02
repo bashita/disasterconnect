@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Volunteer Details</title><style>body{font-family:Arial,sans-serif;background:#0b1120;color:#f8fafc;padding:2rem}.card{max-width:600px;padding:1.5rem;border:1px solid #f59e0b;border-radius:12px;background:#111827}dt{color:#cbd5e1;margin-top:1rem}dd{margin:0.25rem 0 0}</style></head>
+<body><a href="{{ url_for('manage_volunteers') }}">Back to volunteers</a><div class="card"><h1>{{ volunteer.full_name }}</h1><dl><dt>Email</dt><dd>{{ volunteer.email }}</dd><dt>Phone</dt><dd>{{ volunteer.phone }}</dd><dt>Skills</dt><dd>{{ volunteer.skills or 'Not provided' }}</dd><dt>Blood group</dt><dd>{{ volunteer.blood_group or 'Not provided' }}</dd><dt>Status</dt><dd>{{ 'Available' if volunteer.is_available else 'Unavailable' }}</dd><dt>Coordinates</dt><dd>{{ volunteer.latitude or 'N/A' }}, {{ volunteer.longitude or 'N/A' }}</dd></dl></div></body>
+</html>

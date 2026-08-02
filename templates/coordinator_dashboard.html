@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coordinator Dashboard - DisasterConnect India</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Chart.js for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Leaflet.js for Live Map (free, no API key required) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    /* ==========================================================================
+       1. CORE THEME & RESET
+       ========================================================================== */
+    :root {
+      --primary: #F59E0B;
+      --primary-hover: #FBBF24;
+      --primary-dark: #D97706;
+      --bg-dark: #0B1120;
+      --sidebar-bg: rgba(15, 23, 42, 0.75);
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(245, 158, 11, 0.2);
+      --text-main: #F8FAFC;
+      --text-muted: #CBD5E1;
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --danger: #EF4444;
+      --success: #10B981;
+      --info: #3B82F6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 85% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 3px; }
+
+    /* ==========================================================================
+       2. SIDEBAR STYLING
+       ========================================================================== */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .sidebar-brand i { color: var(--primary); }
+
+    .nav-menu {
+      list-style: none;
+      padding: 1.5rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active a, .nav-item a:hover {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .sidebar-footer {
+      padding: 1.25rem;
+      border-top: 1px solid rgba(245, 158, 11, 0.15);
+    }
+
+    .btn-logout {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: 0.3s;
+    }
+
+    .btn-logout:hover { background: var(--danger); color: #fff; }
+
+    /* ==========================================================================
+       3. MAIN CONTENT WRAPPER & HEADER
+       ========================================================================== */
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dashboard-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFF 0%, var(--primary-hover) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       4. STAT CARDS (TOP METRICS)
+       ========================================================================== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .stat-info h3 {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stat-info p {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       5. MAP & TABLES & ANALYTICS SECTIONS
+       ========================================================================== */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Live Map (Leaflet) */
+    .map-container {
+      width: 100%;
+      height: 420px;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #liveMap {
+      width: 100%;
+      height: 100%;
+      background: #0B1120;
+    }
+
+    /* Dark-theme the Leaflet tiles + controls to match dashboard */
+    #liveMap .leaflet-tile-pane {
+      filter: brightness(0.6) invert(1) contrast(0.9) hue-rotate(200deg) saturate(0.5);
+    }
+
+    #liveMap .leaflet-control-zoom a {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--primary);
+      border: 1px solid var(--card-border);
+    }
+
+    #liveMap .leaflet-control-zoom a:hover {
+      background: rgba(245, 158, 11, 0.15);
+    }
+
+    #liveMap .leaflet-control-attribution {
+      background: rgba(11, 17, 32, 0.75);
+      color: var(--text-muted);
+    }
+
+    #liveMap .leaflet-control-attribution a {
+      color: var(--primary);
+    }
+
+    .map-legend {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      z-index: 500;
+      display: flex;
+      gap: 1rem;
+      background: rgba(11, 17, 32, 0.85);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(8px);
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .map-legend span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-incident { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+    .dot-volunteer { background: var(--primary); box-shadow: 0 0 8px var(--primary); }
+
+    /* Custom Leaflet marker pins */
+    .pin-incident, .pin-volunteer {
+      width: 16px;
+      height: 16px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      border: 2px solid rgba(255,255,255,0.8);
+    }
+    .pin-incident { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+    .pin-volunteer { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+
+    .leaflet-popup-content-wrapper {
+      background: #0F172A;
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+    }
+    .leaflet-popup-tip { background: #0F172A; }
+    .popup-title { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .popup-row { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* Tables Styling */
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      padding: 0.9rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 0.9rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    tr:hover td {
+      background: rgba(245, 158, 11, 0.03);
+    }
+
+    .badge {
+      padding: 0.3rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-info { background: rgba(59, 130, 246, 0.2); color: var(--info); border: 1px solid rgba(59, 130, 246, 0.3); }
+
+    /* Analytics Grid */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .chart-box {
+      position: relative;
+      height: 260px;
+    }
+
+    /* Action Buttons inside Table */
+    .btn-action {
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--primary);
+      color: var(--bg-dark);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .btn-action:hover { background: var(--primary-hover); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .analytics-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { width: 70px; }
+      .sidebar-brand span, .nav-item span, .sidebar-footer span { display: none; }
+      .main-wrapper { margin-left: 70px; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. SIDEBAR NAVIGATION
+       ========================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>DisasterConnect</span>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item active">
+        <a href="{{ url_for('coordinator_dashboard') }}"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('create_emergency') }}"><i class="fa-solid fa-triangle-exclamation"></i><span>Emergencies</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('manage_volunteers') }}"><i class="fa-solid fa-users"></i><span>Volunteers</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('assign_task_page') }}"><i class="fa-solid fa-list-check"></i><span>Task Allocation</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('live_map') }}"><i class="fa-solid fa-map-location-dot"></i><span>Live Map</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('coordinator_analytics') }}"><i class="fa-solid fa-chart-line"></i><span>Analytics</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{url_for('coordinator_chat')}}"><i class="fa-solid fa-user"></i><span>Chat</span></a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('contact_messages')}}"><i class="fa-solid fa-user"></i><span>Messages</span></a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <a class="btn-logout" href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       2. MAIN CONTENT AREA
+       ========================================================================== -->
+  <main class="main-wrapper">
+
+    <!-- Top Navigation / Header -->
+    <header class="dashboard-header">
+      <div class="dashboard-title">
+        <h1>Coordinator Operational Center</h1>
+      </div>
+      <div class="user-profile">
+        <div class="avatar">CO</div>
+        <div>
+          <h4 style="font-size: 0.85rem;">Coordinator</h4>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Regional Lead</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stat Cards Top Row -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-info">
+          <h3>Total Volunteers</h3>
+          <p>{{ total_volunteers }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="color: var(--info); background: rgba(59, 130, 246, 0.12);"><i class="fa-solid fa-user-check"></i></div>
+        <div class="stat-info">
+          <h3>Active Volunteers</h3>
+          <p>{{ active_volunteers }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="color: var(--danger); background: rgba(239, 68, 68, 0.12);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="stat-info">
+          <h3>Active Emergencies</h3>
+          <p>{{ active_emergencies }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="color: var(--success); background: rgba(16, 185, 129, 0.12);"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="stat-info">
+          <h3>Completed Tasks</h3>
+          <p>{{ completed_tasks }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Map Container Section -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-map-location-dot"></i> Live Operational Map</h2>
+        <span class="badge badge-danger"><i class="fa-solid fa-circle"></i> Live Tracking Active</span>
+      </div>
+      <div class="map-container">
+        <div id="liveMap"></div>
+        <div class="map-legend">
+          <span><span class="legend-dot dot-incident"></span> Active Incidents</span>
+          <span><span class="legend-dot dot-volunteer"></span> Deployed Volunteers</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Emergency Requests Table -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-bell"></i> Live Emergency Requests</h2>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Incident ID</th>
+              <th>Location</th>
+              <th>Type</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for emergency in emergencies %}
+              <tr>
+                <td>#EM-{{ '%04d'|format(emergency.id) }}</td>
+                <td>{{ emergency.location_name }}</td>
+                <td>{{ emergency.title }}</td>
+                <td><span class="badge {{ 'badge-danger' if emergency.severity in ['Critical', 'High'] else 'badge-info' }}">{{ emergency.severity }}</span></td>
+                <td>{{ emergency.status }}</td>
+                <td><a class="btn-action" href="{{ url_for('assign_task_page') }}">Assign Task</a></td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="6">No emergencies have been created yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Volunteer List Table -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-user-shield"></i> Registered Relief Volunteers</h2>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Volunteer Name</th>
+              <th>Primary Skill</th>
+              <th>Blood Group</th>
+              <th>Location Base</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for volunteer in volunteers %}
+            <tr>
+              <td>{{ volunteer.full_name }}</td>
+              <td>{{ volunteer.skills or 'General response' }}</td>
+              <td>{{ volunteer.blood_group or 'Not provided' }}</td>
+              <td>{% if volunteer.latitude is not none and volunteer.longitude is not none %}GPS available{% else %}Location unavailable{% endif %}</td>
+              <td><span class="badge {{ 'badge-info' if volunteer.is_available else 'badge-danger' }}">{{ 'Available' if volunteer.is_available else 'Unavailable' }}</span></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5">No volunteers have registered yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Analytics Section with Charts -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-chart-line"></i> Operations Analytics</h2>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-box">
+          <canvas id="responseChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <canvas id="skillsChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       3. MAP INITIALIZATION SCRIPT
+       ========================================================================== -->
+  <script id="completed-chart-data" type="application/json">{{ completed_by_day | tojson }}</script>
+  <script id="emergency-chart-data" type="application/json">{{ emergencies_by_type | tojson }}</script>
+  <script>
+    // Center roughly over India, covering the incident/volunteer spread
+    const map = L.map('liveMap', {
+      zoomControl: true,
+      attributionControl: true
+    }).setView([16.5, 80.5], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    function makeIcon(cssClass) {
+      return L.divIcon({
+        className: '',
+        html: `<div class="${cssClass}"></div>`,
+        iconSize: [16, 16],
+        iconAnchor: [8, 16],
+        popupAnchor: [0, -16]
+      });
+    }
+
+    const incidentIcon = makeIcon('pin-incident');
+    const volunteerIcon = makeIcon('pin-volunteer');
+
+    fetch('/api/map-data')
+      .then(response => response.json())
+      .then(data => {
+        data.emergencies.forEach(i => {
+          L.marker([i.latitude, i.longitude], { icon: incidentIcon }).addTo(map).bindPopup(
+            `<div class="popup-title">#EM-${String(i.id).padStart(4, '0')} — ${i.title}</div>
+             <div class="popup-row">${i.location_name}</div>
+             <div class="popup-row">Severity: ${i.severity}</div>`
+          );
+        });
+
+        data.volunteers.forEach(v => {
+          L.marker([v.latitude, v.longitude], { icon: volunteerIcon }).addTo(map).bindPopup(
+            `<div class="popup-title">${v.full_name}</div>
+             <div class="popup-row">Status: ${v.is_available ? 'Available' : 'Unavailable'}</div>`
+          );
+        });
+      });
+  </script>
+
+  <!-- ==========================================================================
+       4. CHART INITIALIZATION SCRIPT
+       ========================================================================== -->
+  <script>
+    // Set standard Chart.js styling choices for Dark + Gold theme
+    Chart.defaults.color = '#CBD5E1';
+    Chart.defaults.borderColor = 'rgba(245, 158, 11, 0.1)';
+
+    // 1. Response Rate Bar Chart
+    const completedByDay = JSON.parse(document.getElementById('completed-chart-data').textContent);
+    const emergenciesByType = JSON.parse(document.getElementById('emergency-chart-data').textContent);
+    const ctx1 = document.getElementById('responseChart').getContext('2d');
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: completedByDay.map(item => item.day),
+        datasets: [{
+          label: 'Incidents Resolved',
+          data: completedByDay.map(item => item.total),
+          backgroundColor: '#F59E0B',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: { display: true, text: 'Weekly Incident Resolution Count' }
+        }
+      }
+    });
+
+    // 2. Skillset Distribution Doughnut Chart
+    const ctx2 = document.getElementById('skillsChart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: emergenciesByType.map(item => item.severity),
+        datasets: [{
+          data: emergenciesByType.map(item => item.total),
+          backgroundColor: ['#F59E0B', '#EF4444', '#3B82F6', '#10B981'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: { display: true, text: 'Volunteer Skill Distribution' }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

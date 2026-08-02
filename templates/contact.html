@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact | DisasterConnect</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <script>
+                    alert("{{ message }}");
+                </script>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <!-- Navigation -->
+
+    <nav>
+
+        <div class="logo">
+
+            <i class="fa-solid fa-shield-heart"></i>
+
+            DisasterConnect
+
+        </div>
+
+        <ul>
+
+            <li><a href="{{url_for('landing_page')}}">Home</a></li>
+
+            <li><a href="{{url_for('about')}}">About</a></li>
+
+            <li><a class="active" href="{{url_for('contact')}}">Contact</a></li>
+
+        </ul>
+
+    </nav>
+
+    <!-- Hero -->
+
+    <section class="hero">
+
+        <h1>Contact Us</h1>
+
+        <p>
+            We're here to help. Reach out to us for support,
+            partnerships, or any disaster-related assistance.
+        </p>
+
+    </section>
+
+    <!-- Contact Section -->
+
+    <section class="contact-container">
+
+        <!-- Contact Information -->
+
+        <div class="contact-info">
+
+            <h2>Get In Touch</h2>
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                <div>
+
+                    <h3>Address</h3>
+
+                    <p>Chennai, Tamil Nadu, India</p>
+
+                </div>
+
+            </div>
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-phone"></i>
+
+                <div>
+
+                    <h3>Phone</h3>
+
+                    <p>+91 98765 43210</p>
+
+                </div>
+
+            </div>
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                <div>
+
+                    <h3>Email</h3>
+
+                    <p>support@disasterconnect.com</p>
+
+                </div>
+
+            </div>
+
+            <div class="info-box">
+
+                <i class="fa-solid fa-clock"></i>
+
+                <div>
+
+                    <h3>Working Hours</h3>
+
+                    <p>24 × 7 Emergency Support</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Contact Form -->
+
+        <div class="contact-form">
+
+            <h2>Send Message</h2>
+
+            <form action="{{ url_for('contact') }}" method="POST">
+
+                <div class="input-group">
+
+                    <input type="text" name="name" placeholder="Your Name" required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <input type="email" name="email" placeholder="Your Email" required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <input type="text" name="subject" placeholder="Subject" required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+
+                </div>
+
+                <button type="submit">
+
+                    <i class="fa-solid fa-paper-plane"></i>
+
+                    Send Message
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    <!-- Emergency Contact -->
+
+    <section class="emergency">
+
+        <h2>Emergency Helpline</h2>
+
+        <div class="emergency-cards">
+
+            <div class="ecard">
+
+                <i class="fa-solid fa-truck-medical"></i>
+
+                <h3>Ambulance</h3>
+
+                <p>108</p>
+
+            </div>
+
+            <div class="ecard">
+
+                <i class="fa-solid fa-fire-extinguisher"></i>
+
+                <h3>Fire Service</h3>
+
+                <p>101</p>
+
+            </div>
+
+            <div class="ecard">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <h3>Police</h3>
+
+                <p>100</p>
+
+            </div>
+
+            <div class="ecard">
+
+                <i class="fa-solid fa-phone-volume"></i>
+
+                <h3>Disaster Helpline</h3>
+
+                <p>1078</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+
+            © 2026 DisasterConnect |
+            AI Powered Disaster Response Management System
+
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

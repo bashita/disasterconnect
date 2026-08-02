@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analytics - DisasterConnect</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { margin: 0; padding: 2rem; font-family: Arial, sans-serif; background: #0b1120; color: #f8fafc; }
+    a { color: #f59e0b; }
+    .stats, .charts { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .card { padding: 1.25rem; margin: 1rem 0; border: 1px solid rgba(245,158,11,.3); border-radius: 12px; background: rgba(255,255,255,.05); }
+    .metric { font-size: 2rem; font-weight: 700; color: #f59e0b; }
+    .chart { height: 300px; }
+  </style>
+</head>
+<body>
+  <a href="{{ url_for('coordinator_dashboard') }}">Back to dashboard</a>
+  <h1>Analytics</h1>
+  <section class="stats">
+    <div class="card"><div>Volunteers Online</div><div class="metric">{{ volunteers_online }}</div></div>
+    <div class="card"><div>Completed Tasks</div><div class="metric">{{ completed_tasks }}</div></div>
+    <div class="card"><div>Average Response Time</div><div class="metric">{{ response_time }} min</div></div>
+  </section>
+  <section class="charts">
+    <div class="card chart"><canvas id="emergencyChart"></canvas></div>
+  </section>
+  <script>
+    const emergencyLabels = {{ emergencies_by_type | map(attribute='label') | list | tojson }};
+    const emergencyTotals = {{ emergencies_by_type | map(attribute='total') | list | tojson }};
+
+    new Chart(document.getElementById('emergencyChart'), {
+      type: 'doughnut',
+      data: {
+        labels: emergencyLabels,
+        datasets: [{
+          data: emergencyTotals,
+          backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: { display: true, text: 'Emergencies by Type / Priority', color: '#f8fafc' }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

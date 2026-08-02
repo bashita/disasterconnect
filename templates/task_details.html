@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Task Details | DisasterConnect</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='task_details.css') }}">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<aside class="sidebar">
+
+<h2>DisasterConnect</h2>
+
+<ul>
+
+<li>
+<a href="{{ url_for('volunteer_dashboard') }}">
+<i class="fa-solid fa-house"></i>
+Dashboard
+</a>
+</li>
+
+<li>
+<a href="{{ url_for('volunteer_profile') }}">
+<i class="fa-solid fa-user"></i>
+Profile
+</a>
+</li>
+
+<li>
+<a class="active" href="{{ url_for('task_details') }}">
+<i class="fa-solid fa-list-check"></i>
+Task Details
+</a>
+</li>
+
+<li>
+<a href="{{ url_for('notifications') }}">
+<i class="fa-solid fa-bell"></i>
+Notifications
+</a>
+</li>
+
+<li>
+<a href="{{ url_for('chat') }}">
+<i class="fa-solid fa-comments"></i>
+Chat
+</a>
+</li>
+
+<li>
+<a href="{{ url_for('logout') }}">
+<i class="fa-solid fa-right-from-bracket"></i>
+Logout
+</a>
+</li>
+
+</ul>
+
+</aside>
+
+<!-- Main -->
+<main class="main">
+
+<header>
+
+<h1>Emergency Task Details</h1>
+
+<button class="sos">
+<i class="fa-solid fa-triangle-exclamation"></i>
+SOS
+</button>
+
+</header>
+
+<!-- Information -->
+
+<div class="grid">
+
+<div class="panel">
+
+<h2>Task Information</h2>
+
+{% if tasks %}
+
+<table>
+
+<tr>
+    <th>Task ID</th>
+    <th>Title</th>
+    <th>Location</th>
+    <th>Date & time</th>
+    <th>Priority</th>
+    <th>Status</th>
+</tr>
+
+{% for task in tasks %}
+
+<tr>
+
+<td>{{ task.task_id }}</td>
+<td>{{ task.task_title }}</td>
+<td>{{ task.location }}</td>
+<td>{{ task.assigned_date }}</td>
+<td>{{ task.priority }}</td>
+<td>{{ task.status }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% else %}
+
+<p>No tasks assigned.</p>
+
+{% endif %}
+
+</div>
+
+<div class="panel">
+
+<h2>Skills Required</h2>
+
+<div class="skills">
+
+<span>First Aid</span>
+
+<span>Food Distribution</span>
+
+<span>Disaster Relief</span>
+
+<span>Communication</span>
+
+<span>Medical Support</span>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Instructions -->
+
+<section class="panel">
+
+<h2>Task Instructions</h2>
+
+<ul>
+
+<li>Reach the reporting location before 8:00 AM.</li>
+
+<li>Wear your volunteer ID card.</li>
+
+<li>Carry first aid kit and safety equipment.</li>
+
+<li>Follow coordinator instructions.</li>
+
+<li>Report emergencies immediately.</li>
+
+<li>Update task status regularly.</li>
+
+</ul>
+
+</section>
+
+<!-- Team -->
+
+<section class="panel">
+
+<h2>Assigned Team</h2>
+
+<table>
+
+<tr>
+<th>Name</th>
+<th>Role</th>
+</tr>
+
+<tr>
+<td>{{ name }}</td>
+<td>{{ role }}</td>
+</tr>
+
+</table>
+
+</section>
+
+<!-- Buttons -->
+
+{% for task in tasks %}
+
+<div class="panel">
+
+<h2>{{ task.task_title }}</h2>
+
+<p>{{ task.description }}</p>
+
+<table>
+
+<tr>
+<th>Location</th>
+<td>{{ task.location }}</td>
+</tr>
+
+<tr>
+<th>Priority</th>
+<td>{{ task.priority }}</td>
+</tr>
+
+<tr>
+<th>Coordinator</th>
+<td>{{ task.assigned_by }}</td>
+</tr>
+
+<tr>
+<th>Status</th>
+<td>{{ task.status }}</td>
+</tr>
+
+<tr>
+<th>Assigned</th>
+<td>{{ task.assigned_date }}</td>
+</tr>
+
+<tr>
+<th>Deadline</th>
+<td>{{ task.deadline }}</td>
+</tr>
+
+</table>
+
+<form action="{{ url_for('update_task_status', task_id=task.task_id) }}" method="POST">
+
+<select name="status">
+
+<option value="Pending"
+{% if task.status=="Pending" %}selected{% endif %}>
+Pending
+</option>
+
+<option value="Accepted"
+{% if task.status=="Accepted" %}selected{% endif %}>
+Accepted
+</option>
+
+<option value="Started"
+{% if task.status=="Started" %}selected{% endif %}>
+Started
+</option>
+
+<option value="Completed"
+{% if task.status=="Completed" %}selected{% endif %}>
+Completed
+</option>
+
+<option value="Declined"
+{% if task.status=="Declined" %}selected{% endif %}>
+Declined
+</option>
+
+</select>
+
+<button type="submit">
+Update Status
+</button>
+
+</form>
+
+</div>
+
+<br>
+
+{% endfor %}
+
+</main>
+
+</body>
+
+</html>

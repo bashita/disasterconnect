@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | DisasterConnect</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='notification.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <h2>DisasterConnect</h2>
+
+        <ul>
+
+            <li>
+                <a href="{{ url_for('volunteer_dashboard') }}">
+                    <i class="fa-solid fa-house"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('volunteer_profile') }}">
+                    <i class="fa-solid fa-user"></i>
+                    Profile
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('task_details', task_id=1) }}">
+                    <i class="fa-solid fa-list-check"></i>
+                    Task Details
+                </a>
+            </li>
+
+            <li>
+                <a class="active" href="{{ url_for('notifications') }}">
+                    <i class="fa-solid fa-bell"></i>
+                    Notifications
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('chat') }}">
+                    <i class="fa-solid fa-comments"></i>
+                    Chat
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('logout') }}">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="main">
+
+        <!-- Header -->
+
+        <header>
+
+            <h1>
+
+                Volunteer Notifications
+
+            </h1>
+
+        </header>
+
+        <!-- Notification Table -->
+
+        <section class="panel">
+
+            <h2>
+
+                Notification History
+
+            </h2>
+
+            {% if notifications and notifications|length > 0 %}
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Notification ID</th>
+                            <th>Type</th>
+                            <th>Title</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Time</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for notification in notifications %}
+                        {% set type_label = 'Emergency' if 'emergency' in (notification.title|string + ' ' + (notification.message|string))|lower else 'Task' %}
+
+                        <tr>
+
+                            <td>{{ notification.id }}</td>
+
+                            <td>{{ type_label }}</td>
+
+                            <td>{{ notification.title }}</td>
+
+                            <td>{{ notification.message }}</td>
+
+                            <td>{{ notification.created_at.strftime("%d-%m-%Y") }}</td>
+
+                            <td>{{ notification.created_at.strftime("%I:%M %p") }}</td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <p style="text-align:center; padding:20px;">
+
+                No notifications available.
+
+            </p>
+
+            {% endif %}
+
+        </section>
+
+        <!-- Notification Summary -->
+
+        <section class="panel">
+
+            <h2>
+
+                Notification Summary
+
+            </h2>
+
+            <div class="grid">
+
+                <div class="card">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <h3>Total Emergency Alerts</h3>
+
+                    <p>{{ emergency_count }}</p>
+
+                </div>
+
+                <div class="card">
+
+                    <i class="fa-solid fa-list-check"></i>
+
+                    <h3>Task Notifications</h3>
+
+                    <p>{{ task_count }}</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

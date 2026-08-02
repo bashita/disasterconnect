@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volunteer Login - DisasterConnect India</title>
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ==========================================================================
+       1. CORE RESET & DARK + GOLD THEME
+       ========================================================================== */
+    :root {
+      --primary: #F59E0B;
+      --primary-hover: #FBBF24;
+      --primary-dark: #D97706;
+      --bg-dark: #0B1120;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(245, 158, 11, 0.25);
+      --card-glow: rgba(245, 158, 11, 0.12);
+      --text-main: #F8FAFC;
+      --text-muted: #CBD5E1;
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --input-border: rgba(245, 158, 11, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(217, 119, 6, 0.06) 0%, transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+      border-radius: 4px;
+    }
+    ::selection {
+      background: var(--primary);
+      color: var(--bg-dark);
+    }
+
+    /* ==========================================================================
+       2. GLASS CARD CONTAINER & BRAND HEADER
+       ========================================================================== */
+    .login-container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px var(--card-glow);
+      padding: 2.5rem;
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      margin-bottom: 0.75rem;
+    }
+
+    .brand-logo i {
+      color: var(--primary);
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
+    }
+
+    .brand-header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+    }
+
+    .brand-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* ==========================================================================
+       3. FORM FIELDS & INPUT STYLING
+       ========================================================================== */
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i.input-icon {
+      position: absolute;
+      left: 1rem;
+      color: var(--primary);
+      font-size: 0.95rem;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 0.8rem 1rem 0.8rem 2.75rem;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 1rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-password:hover {
+      color: var(--primary);
+    }
+
+    /* Form Utilities: Remember & Forgot Password */
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .remember-me input[type="checkbox"] {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-link:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       4. BUTTONS & FOOTER LINKS
+       ========================================================================== */
+    .btn-login {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--bg-dark);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
+      background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+    }
+
+    .form-footer {
+      margin-top: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(245, 158, 11, 0.15);
+      padding-top: 1.25rem;
+    }
+
+    .form-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .form-footer a:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       5. ANIMATIONS
+       ========================================================================== */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    
+    <!-- Brand Header -->
+    <div class="brand-header">
+      <a href="{{ url_for('landing_page') }}" class="brand-logo">
+        <i class="fa-solid fa-shield-halved"></i> DisasterConnect
+      </a>
+      <h1>Volunteer Login</h1>
+      <p>Access your deployment portal and response tasks</p>
+    </div>
+
+    {% if error %}
+    <div style="background:#fff1f2;color:#b91c1c;border:1px solid #fecdd3;padding:10px 12px;border-radius:10px;margin-bottom:16px;font-size:0.9rem;">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+    <div style="background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;padding:10px 12px;border-radius:10px;margin-bottom:16px;font-size:0.9rem;">{{ success }}</div>
+    {% endif %}
+
+    <!-- Simple Login Form -->
+    <form class="login-form" action="{{ url_for('volunteer_login') }}" method="POST">
+      
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-envelope input-icon"></i>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="registered@example.com" 
+            required 
+          />
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="••••••••" 
+            required 
+          />
+          <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+        </div>
+      </div>
+
+      <!-- Remember Me & Forgot Password -->
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox" id="rememberMe" name="rememberMe" />
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <!-- Login Button -->
+      <button type="submit" class="btn-login">
+        <i class="fa-solid fa-right-to-bracket"></i> Login
+      </button>
+
+      <!-- Registration & Home Links -->
+      <div class="form-footer">
+        <div>
+           New to DisasterConnect? <a href="{{ url_for('register') }}">Register here</a>
+        </div>
+         <a href="{{ url_for('landing_page') }}"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Micro Interaction Script -->
+  <script>
+    // Password Visibility Toggle
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+  </script>
+</body>
+</html>

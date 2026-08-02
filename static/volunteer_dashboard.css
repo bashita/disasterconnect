@@ -1,0 +1,347 @@
+/* Import Google Fonts: Inter & Outfit */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
+
+/* ==========================================================================
+   1. CORE THEME & VARIABLES
+   ========================================================================== */
+:root {
+  --primary: #F59E0B;
+  --primary-hover: #FBBF24;
+  --primary-dark: #D97706;
+  --bg-dark: #0B1120;
+  --sidebar-bg: rgba(15, 23, 42, 0.75);
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --card-border: rgba(245, 158, 11, 0.2);
+  --text-main: #F8FAFC;
+  --text-muted: #CBD5E1;
+  --input-bg: rgba(15, 23, 42, 0.7);
+  --danger: #EF4444;
+  --danger-hover: #DC2626;
+  --success: #10B981;
+}
+
+/* ==========================
+   BODY
+========================== */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 85% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 15% 80%, rgba(59, 130, 246, 0.04) 0%, transparent 45%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==========================
+   SIDEBAR
+========================== */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  padding: 25px;
+  background: var(--sidebar-bg);
+  backdrop-filter: blur(16px);
+  border-right: 1px solid var(--card-border);
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar h2 {
+  font-family: 'Outfit', sans-serif;
+  color: var(--primary);
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 12px 0;
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px 18px;
+  text-decoration: none;
+  color: var(--text-muted);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+/* Sidebar Hover & Active */
+.sidebar a:hover,
+.sidebar .active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--bg-dark);
+  font-weight: 700;
+  transform: translateX(6px);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  border-color: var(--primary-hover);
+}
+
+/* ==========================
+   MAIN CONTENT AREA
+========================== */
+.main {
+  flex: 1;
+  padding: 35px;
+  overflow-y: auto;
+}
+
+/* ==========================
+   HEADER
+========================== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-main);
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ==========================
+   SOS BUTTON
+========================== */
+.sos {
+  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+  color: #ffffff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.sos:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #F87171 0%, #EF4444 100%);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+}
+
+/* ==========================
+   STAT CARDS
+========================== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 22px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(16px);
+  border-radius: 18px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: var(--primary);
+  box-shadow: 0 15px 35px rgba(245, 158, 11, 0.15);
+}
+
+.card h3 {
+  font-family: 'Outfit', sans-serif;
+  color: var(--primary);
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card p {
+  font-family: 'Outfit', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+/* ==========================
+   GRID LAYOUT
+========================== */
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 22px;
+}
+
+/* ==========================
+   PANELS
+========================== */
+.panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.panel h2 {
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-main);
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+  padding-bottom: 10px;
+}
+
+/* ==========================
+   TABLE
+========================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: rgba(15, 23, 42, 0.8);
+  color: var(--primary);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--card-border);
+}
+
+th:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+th:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+tr:hover td {
+  background: rgba(245, 158, 11, 0.05);
+  color: var(--text-main);
+}
+
+/* ==========================
+   LISTS
+========================== */
+.panel ul,
+.panel ol {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.panel li {
+  margin-bottom: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ==========================
+   MAP PLACEHOLDER
+========================== */
+.map {
+  height: 240px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 2px dashed var(--card-border);
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.map:hover {
+  border-color: var(--primary);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* ==========================
+   CUSTOM SCROLLBAR
+========================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* ==========================
+   RESPONSIVE DESIGN
+========================== */
+@media (max-width: 900px) {
+  body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  header h1 {
+    font-size: 26px;
+  }
+}

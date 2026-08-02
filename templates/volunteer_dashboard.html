@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='volunteer_dashboard.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>DisasterConnect</h2>
+    <ul>
+      <li><a class="active" href="{{ url_for('volunteer_dashboard') }}"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+      <li><a href="{{ url_for('volunteer_profile') }}"><i class="fa-solid fa-user"></i> Profile</a></li>
+      <li><a href="{{ url_for('task_details', task_id=1) }}"><i class="fa-solid fa-list"></i> Tasks</a></li>
+      <li><a href="{{ url_for('notifications') }}"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+      <li><a href="{{ url_for('chat') }}"><i class="fa-solid fa-comments"></i> Chat</a></li>
+      <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <header>
+      <h1>Welcome, {{ volunteer.full_name }} 👋</h1>
+      <button class="sos">SOS</button>
+    </header>
+
+    <section class="cards">
+      <div class="card"><h3>Assigned Tasks</h3><p>{{ assigned }}</p></div>
+      <div class="card"><h3>Completed</h3><p>{{ completed }}</p></div>
+      <div class="card"><h3>Hours Served</h3><p>{{ hours_served }}</p></div>
+      <div class="card"><h3>Leaderboard Rank</h3><p>{{ leaderboard_rank }}</p></div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Volunteer Info</h2>
+        <p><strong>Email:</strong> {{ volunteer.email }}</p>
+        <p><strong>Phone:</strong> {{ volunteer.phone }}</p>
+        <p><strong>Skills:</strong> {{ volunteer.skills }}</p>
+        <p><strong>Location:</strong> {{ volunteer.location }}</p>
+        <p><strong>State:</strong> {{ volunteer.state }}</p>
+      </div>
+
+      <div class="panel">
+        <h2>Assigned Tasks</h2>
+        {% if tasks %}
+          <ul>
+            {% for task in tasks %}
+              <li>
+                <a href="{{ url_for('task_details', task_id=task.task_id) }}">{{ task.task_title }}</a>
+                <small>({{ task.priority }} - {{ task.status }})</small>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No tasks assigned yet.</p>
+        {% endif %}
+      </div>
+
+      <div class="panel map-panel">
+        <h2>Live Map</h2>
+        <div id="volunteer-map" class="map"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Notifications</h2>
+        <ul>
+          {% for note in notifications %}
+            <li>{{ note }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('volunteer-map', { zoomControl: true }).setView([20.5937, 78.9629], 5);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd',
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+    }).addTo(map);
+
+    function createMarker(iconClass, markerClass) {
+      return L.divIcon({
+        className: 'custom-map-icon',
+        html: `<div class="custom-marker ${markerClass}"><i class="${iconClass}"></i></div>`,
+        iconSize: [34, 34],
+        iconAnchor: [17, 17]
+      });
+    }
+
+    const markerLayer = L.layerGroup().addTo(map);
+
+    fetch('{{ url_for("map_data_api") }}')
+      .then(response => response.json())
+      .then(data => {
+        const points = [];
+
+        data.emergencies.forEach(emergency => {
+          if (emergency.latitude && emergency.longitude) {
+            const point = [Number(emergency.latitude), Number(emergency.longitude)];
+            points.push(point);
+            L.marker(point, { icon: createMarker('fa-solid fa-triangle-exclamation', 'marker-emergency') })
+              .addTo(markerLayer)
+              .bindPopup(`<div class="map-popup"><strong>${emergency.title || 'Emergency'}</strong><br>${emergency.location_name || 'Location unavailable'}<br><small>${emergency.severity || 'Unknown'} / ${emergency.status || 'Active'}</small></div>`);
+          }
+        });
+
+        data.volunteers.forEach(volunteer => {
+          if (volunteer.latitude && volunteer.longitude) {
+            const point = [Number(volunteer.latitude), Number(volunteer.longitude)];
+            points.push(point);
+            L.marker(point, { icon: createMarker('fa-solid fa-user-shield', 'marker-volunteer') })
+              .addTo(markerLayer)
+              .bindPopup(`<div class="map-popup"><strong>${volunteer.full_name}</strong><br>Volunteer location<br><small>${volunteer.is_available ? 'Available' : 'Unavailable'}</small></div>`);
+          }
+        });
+
+        if (points.length) {
+          map.fitBounds(points, { padding: [30, 30], maxZoom: 8 });
+        }
+      })
+      .catch(error => {
+        console.error('Unable to load map data:', error);
+      });
+  </script>
+</body>
+</html>

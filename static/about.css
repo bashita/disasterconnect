@@ -1,0 +1,335 @@
+/* ======================================
+   GOOGLE FONT
+====================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+/* ======================================
+   BODY
+====================================== */
+
+body{
+    background:#0b0b0b;
+    color:#fff;
+    line-height:1.7;
+}
+
+/* ======================================
+   NAVBAR
+====================================== */
+
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 8%;
+    background:#141414;
+    border-bottom:2px solid #F59E0B;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.logo{
+    color:#F59E0B;
+    font-size:28px;
+    font-weight:700;
+}
+
+.logo i{
+    margin-right:10px;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+}
+
+nav ul li{
+    margin-left:25px;
+}
+
+nav ul li a{
+    color:#fff;
+    text-decoration:none;
+    font-weight:500;
+    transition:.3s;
+}
+
+nav ul li a:hover,
+nav ul li a.active{
+    color:#F59E0B;
+}
+
+/* ======================================
+   HERO
+====================================== */
+
+.hero{
+    text-align:center;
+    padding:90px 10%;
+    background:linear-gradient(rgba(0,0,0,.75),
+    rgba(0,0,0,.85)),
+    url("../images/disaster-bg.jpg") center/cover;
+}
+
+.hero h1{
+    font-size:50px;
+    color:#F59E0B;
+    margin-bottom:20px;
+}
+
+.hero p{
+    max-width:800px;
+    margin:auto;
+    font-size:20px;
+    color:#ddd;
+}
+
+/* ======================================
+   SECTION
+====================================== */
+
+.section{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:30px;
+    padding:70px 8%;
+}
+
+/* ======================================
+   CARD
+====================================== */
+
+.card{
+    background:#181818;
+    padding:35px;
+    border-radius:18px;
+    border:1px solid rgba(255,215,0,.15);
+    text-align:center;
+    transition:.35s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    border-color:#F59E0B;
+    box-shadow:0 10px 25px rgba(255,215,0,.2);
+}
+
+.card i{
+    font-size:55px;
+    color:#F59E0B;
+    margin-bottom:20px;
+}
+
+.card h2{
+    margin-bottom:18px;
+    color:#F59E0B;
+}
+
+/* ======================================
+   FEATURES
+====================================== */
+
+.features{
+    padding:70px 8%;
+}
+
+.features h2{
+    text-align:center;
+    color:#F59E0B;
+    margin-bottom:50px;
+    font-size:36px;
+}
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.feature{
+    background:#181818;
+    padding:30px;
+    text-align:center;
+    border-radius:18px;
+    border:1px solid rgba(255,215,0,.15);
+    transition:.3s;
+}
+
+.feature:hover{
+    transform:translateY(-8px);
+    border-color:#F59E0B;
+}
+
+.feature i{
+    font-size:45px;
+    color:#F59E0B;
+    margin-bottom:18px;
+}
+
+.feature h3{
+    margin-bottom:12px;
+}
+
+.feature p{
+    color:#ccc;
+}
+
+/* ======================================
+   WORKFLOW
+====================================== */
+
+.workflow{
+    padding:70px 8%;
+}
+
+.workflow h2{
+    text-align:center;
+    color:#F59E0B;
+    margin-bottom:50px;
+    font-size:36px;
+}
+
+.steps{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+
+.step{
+    background:#181818;
+    padding:30px;
+    border-radius:18px;
+    text-align:center;
+    border:1px solid rgba(255,215,0,.15);
+    transition:.3s;
+}
+
+.step:hover{
+    transform:translateY(-8px);
+}
+
+.step i{
+    font-size:50px;
+    color:#F59E0B;
+    margin-bottom:18px;
+}
+
+.step h3{
+    margin-bottom:10px;
+}
+
+/* ======================================
+   STATS
+====================================== */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+    padding:70px 8%;
+}
+
+.stat{
+    background:#181818;
+    padding:35px;
+    text-align:center;
+    border-radius:18px;
+    border:1px solid rgba(255,215,0,.15);
+    transition:.3s;
+}
+
+.stat:hover{
+    transform:translateY(-8px);
+    border-color:#F59E0B;
+}
+
+.stat h2{
+    font-size:42px;
+    color:#F59E0B;
+    margin-bottom:10px;
+}
+
+.stat p{
+    color:#ddd;
+}
+
+/* ======================================
+   FOOTER
+====================================== */
+
+footer{
+    background:#141414;
+    border-top:2px solid #F59E0B;
+    text-align:center;
+    padding:25px;
+    color:#bbb;
+}
+
+/* ======================================
+   SCROLLBAR
+====================================== */
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#111;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#F59E0B;
+    border-radius:20px;
+}
+
+/* ======================================
+   RESPONSIVE
+====================================== */
+
+@media(max-width:992px){
+
+    nav{
+        flex-direction:column;
+        gap:20px;
+    }
+
+    nav ul{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    .hero h1{
+        font-size:40px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .hero{
+        padding:70px 20px;
+    }
+
+    .hero h1{
+        font-size:34px;
+    }
+
+    .hero p{
+        font-size:17px;
+    }
+
+    .features h2,
+    .workflow h2{
+        font-size:30px;
+    }
+
+}
