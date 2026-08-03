@@ -292,6 +292,7 @@ def register():
         availability = request.form.get('availability', '').strip()
         emergency_contact = request.form.get('emergencyContact', '').strip()
         state = request.form.get('state', '').strip()
+        location = request.form.get('location', '').strip()
         latitude = request.form.get('latitude', '').strip() or None
         longitude = request.form.get('longitude', '').strip() or None
         longitude=request.form.get('longitude','').strip()
