@@ -33,15 +33,15 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 DB_CONFIG = {
-    "host"= os.getenv("MYSQL_HOST"),
-    "user"= os.getenv("MYSQL_USER"),
-    "password"= os.getenv("MYSQL_PASSWORD"),
-    "database"= os.getenv("MYSQL_DATABASE"),
-    "port"=int(os.getenv("DB_PORT")),
-    "ssl"= {"ca": "ca.pem"},
-    "charset"= "utf8mb4",
-    "cursorclass"= pymysql.cursors.DictCursor,
-    "autocommit"= True,
+    "host":os.getenv("MYSQL_HOST"),
+    "user": os.getenv("MYSQL_USER"),
+    "password": os.getenv("MYSQL_PASSWORD"),
+    "database": os.getenv("MYSQL_DATABASE"),
+    "port":int(os.getenv("DB_PORT")),
+    "ssl": {"ca": "ca.pem"},
+    "charset": "utf8mb4",
+    "cursorclass": pymysql.cursors.DictCursor,
+    "autocommit": True,
 }
 
 DB_AVAILABLE = False
