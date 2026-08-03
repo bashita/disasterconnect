@@ -37,7 +37,7 @@ DB_CONFIG = {
     "user": os.getenv("MYSQL_USER"),
     "password": os.getenv("MYSQL_PASSWORD"),
     "database": os.getenv("MYSQL_DATABASE"),
-    "port":int(os.getenv("DB_PORT")),
+    "port":int(os.getenv("DB_PORT",26505)),
     "ssl": {"ca": os.path.join(os.path.dirname(os.path.abspath(__file__)), "ca.pem")},
     "charset": "utf8mb4",
     "cursorclass": pymysql.cursors.DictCursor,
@@ -130,7 +130,23 @@ def normalize_volunteer_table_schema(conn):
             cursor.execute("ALTER TABLE volunteers ADD COLUMN latitude DECIMAL(10,8)")
         if 'longitude' not in columns:
             cursor.execute("ALTER TABLE volunteers ADD COLUMN longitude DECIMAL(11,8)")
+        if 'age' not in columns:
+            cursor.execute("ALTER TABLE volunteers ADD COLUMN age INT NULL")
+        if 'gender' not in columns:
+            cursor.execute("ALTER TABLE volunteers ADD COLUMN gender VARCHAR(20) NULL")
     conn.commit()
+"""def normalize_volunteer_table_schema(conn):
+    with conn.cursor() as cursor:
+        cursor.execute("SHOW COLUMNS FROM volunteers")
+        columns = {row['Field']: row for row in cursor.fetchall()}
+
+        if 'is_available' not in columns:
+            cursor.execute("ALTER TABLE volunteers ADD COLUMN is_available BOOLEAN NOT NULL DEFAULT TRUE")
+        if 'latitude' not in columns:
+            cursor.execute("ALTER TABLE volunteers ADD COLUMN latitude DECIMAL(10,8)")
+        if 'longitude' not in columns:
+            cursor.execute("ALTER TABLE volunteers ADD COLUMN longitude DECIMAL(11,8)")
+    conn.commit()"""
 
 
 def normalize_notification_table_schema(conn):
@@ -279,8 +295,58 @@ init_db()
 def index():
     return render_template('index.html')
 
-
 @app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # 1. Extract and sanitize inputs from the form
+        full_name = request.form.get('fullName', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        password = request.form.get('password', '').strip()
+        skills = request.form.get('skills', '').strip()
+        blood_group = request.form.get('bloodGroup', '').strip()
+        availability = request.form.get('availability', '').strip()
+        emergency_contact = request.form.get('emergencyContact', '').strip()
+        state = request.form.get('state', '').strip()
+        location = request.form.get('location', '').strip()
+        certificate = filename  # or handling file upload filename
+        latitude = request.form.get('latitude', '').strip() or None
+        longitude = request.form.get('longitude', '').strip() or None
+        age = request.form.get('age', '').strip() or None
+        gender = request.form.get('gender', '').strip() or None
+        is_available = 1 if request.form.get('is_available') else 1
+
+        # 2. Hash the password before saving
+        hashed_password = generate_password_hash(password)
+
+        # 3. Execute the INSERT query inside a database cursor block
+        conn = get_db_connection()
+        try:
+            with conn.cursor() as cursor:
+                # <--- YOUR INSERT QUERY GOES HERE --->
+                insert_query = """
+                    INSERT INTO volunteers (
+                        full_name, email, phone, password, skills, blood_group,
+                        availability, emergency_contact, state, location, certificate, 
+                        latitude, longitude, age, gender, is_available
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(insert_query, (
+                    full_name, email, phone, hashed_password, skills, blood_group,
+                    availability, emergency_contact, state, location, certificate, 
+                    latitude, longitude, age, gender, is_available
+                ))
+            conn.commit()
+            flash("Registration successful!", "success")
+            return redirect(url_for('login'))
+        except Exception as e:
+            conn.rollback()
+            flash(f"Error registering user: {str(e)}", "danger")
+        finally:
+            conn.close()
+
+    return render_template('register.html')
+"""@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         full_name = request.form.get('fullName', '').strip()
@@ -295,7 +361,6 @@ def register():
         location = request.form.get('location', '').strip()
         latitude = request.form.get('latitude', '').strip() or None
         longitude = request.form.get('longitude', '').strip() or None
-        longitude=request.form.get('longitude','').strip()
         age=request.form.get('age','').strip()
         gender=request.form.get('gender','').strip()
         is_available = request.form.get('is_available', '').strip()
@@ -336,7 +401,7 @@ def register():
         flash('Registration successful! Please log in.')
         return redirect(url_for('volunteer_login'))
 
-    return render_template('volunteer_registration.html')
+    return render_template('volunteer_registration.html')"""
 
 
 @app.route('/volunteer-login', methods=['GET', 'POST'])
