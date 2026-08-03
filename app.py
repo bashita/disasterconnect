@@ -37,7 +37,7 @@ DB_CONFIG = {
     "user": os.getenv("MYSQL_USER"),
     "password": os.getenv("MYSQL_PASSWORD"),
     "database": os.getenv("MYSQL_DATABASE"),
-    "port":int(os.getenv("DB_PORT",26505)),
+    "port":int(os.getenv("DB_PORT")),
     "ssl": {"ca": os.path.join(os.path.dirname(os.path.abspath(__file__)), "ca.pem")},
     "charset": "utf8mb4",
     "cursorclass": pymysql.cursors.DictCursor,
