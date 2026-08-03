@@ -44,6 +44,7 @@ DB_CONFIG = {
     "autocommit": True,
 }
 
+print(DB_CONFIG)
 DB_AVAILABLE = False
 
 
