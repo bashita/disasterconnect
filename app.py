@@ -292,14 +292,14 @@ def register():
         availability = request.form.get('availability', '').strip()
         emergency_contact = request.form.get('emergencyContact', '').strip()
         state = request.form.get('state', '').strip()
-        location = request.form.get('location', '').strip()
-        latitude=request.form.get('latitude','').strip()
+        latitude = request.form.get('latitude', '').strip() or None
+        longitude = request.form.get('longitude', '').strip() or None
         longitude=request.form.get('longitude','').strip()
         age=request.form.get('age','').strip()
         gender=request.form.get('gender','').strip()
         is_available = request.form.get('is_available', '').strip()
 
-        if not all([full_name, email, phone, password, skills, blood_group, availability, emergency_contact, state, location,latitude, longitude,age,gender,is_available]):
+        if not all([full_name, email, phone, password, skills, blood_group, availability, emergency_contact, state, location, age, gender, is_available]):
             flash('Please fill in all required volunteer information.')
             return render_template('volunteer_registration.html')
 
