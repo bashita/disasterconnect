@@ -768,7 +768,7 @@ def chat():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('landing_page'))
+    return redirect(url_for('index'))
 
 #Coordinator routes and other functions
 def infer_task_requirements(title, description):
