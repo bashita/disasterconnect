@@ -283,6 +283,9 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+
+        print("========== REGISTRATION START ==========")
+
         full_name = request.form.get('fullName', '').strip()
         email = request.form.get('email', '').strip()
         phone = request.form.get('phone', '').strip()
@@ -293,49 +296,195 @@ def register():
         emergency_contact = request.form.get('emergencyContact', '').strip()
         state = request.form.get('state', '').strip()
         location = request.form.get('location', '').strip()
+
         latitude = request.form.get('latitude', '').strip() or None
         longitude = request.form.get('longitude', '').strip() or None
-        age=request.form.get('age','').strip()
-        gender=request.form.get('gender','').strip()
+
+        age = request.form.get('age', '').strip()
+        gender = request.form.get('gender', '').strip()
         is_available = request.form.get('is_available', '').strip()
 
-        if not all([full_name, email, phone, password, skills, blood_group, availability, emergency_contact, state, location, age, gender, is_available]):
-            flash('Please fill in all required volunteer information.')
-            return render_template('volunteer_registration.html')
+        # Debug - do NOT print password
+        print("full_name:", full_name)
+        print("email:", email)
+        print("phone:", phone)
+        print("skills:", skills)
+        print("blood_group:", blood_group)
+        print("availability:", availability)
+        print("emergency_contact:", emergency_contact)
+        print("state:", state)
+        print("location:", location)
+        print("latitude:", latitude)
+        print("longitude:", longitude)
+        print("age:", age)
+        print("gender:", gender)
+        print("is_available:", is_available)
 
+        # Check required fields
+        required_fields = {
+            'full_name': full_name,
+            'email': email,
+            'phone': phone,
+            'password': password,
+            'skills': skills,
+            'blood_group': blood_group,
+            'availability': availability,
+            'emergency_contact': emergency_contact,
+            'state': state,
+            'location': location,
+            'age': age,
+            'gender': gender,
+            'is_available': is_available
+        }
+
+        missing_fields = [
+            field for field, value in required_fields.items()
+            if not value
+        ]
+
+        print("Missing fields:", missing_fields)
+
+        if missing_fields:
+            flash(
+                "Missing required fields: "
+                + ", ".join(missing_fields)
+            )
+            return render_template(
+                'volunteer_registration.html'
+            )
+
+        # Check database
         if not DB_AVAILABLE:
-            flash('Database is unavailable. Please configure MySQL before registering.')
-            return render_template('volunteer_registration.html')
+            print("DATABASE NOT AVAILABLE")
 
+            flash(
+                'Database is unavailable. '
+                'Please configure MySQL before registering.'
+            )
+
+            return render_template(
+                'volunteer_registration.html'
+            )
+
+        # Certificate
         certificate = request.files.get('certificate')
         filename = ''
+
         if certificate and certificate.filename:
-            filename = secure_filename(certificate.filename)
-            certificate.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            filename = secure_filename(
+                certificate.filename
+            )
+
+            certificate.save(
+                os.path.join(
+                    app.config['UPLOAD_FOLDER'],
+                    filename
+                )
+            )
+
+        conn = None
 
         try:
+            print("Connecting to database...")
+
             conn = get_connection()
+
+            print("Database connection successful.")
+
             with conn.cursor() as cursor:
+
+                print("Executing volunteer INSERT...")
+
                 cursor.execute(
                     '''
                     INSERT INTO volunteers (
-                        full_name, email, phone, password, skills, blood_group,
-                        availability, emergency_contact, state, location, certificate, latitude, longitude, age, gender, is_available
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        full_name,
+                        email,
+                        phone,
+                        password,
+                        skills,
+                        blood_group,
+                        availability,
+                        emergency_contact,
+                        state,
+                        location,
+                        certificate,
+                        latitude,
+                        longitude,
+                        age,
+                        gender,
+                        is_available
+                    )
+                    VALUES (
+                        %s, %s, %s, %s,
+                        %s, %s, %s, %s,
+                        %s, %s, %s, %s,
+                        %s, %s, %s, %s
+                    )
                     ''',
-                    (full_name, email, phone, password, skills, blood_group,
-                     availability, emergency_contact, state, location, filename, latitude, longitude, age, gender, is_available)
+                    (
+                        full_name,
+                        email,
+                        phone,
+                        password,
+                        skills,
+                        blood_group,
+                        availability,
+                        emergency_contact,
+                        state,
+                        location,
+                        filename,
+                        latitude,
+                        longitude,
+                        age,
+                        gender,
+                        is_available
+                    )
                 )
+
             conn.commit()
-            conn.close()
+
+            print("Volunteer inserted successfully.")
+
         except Exception as exc:
-            flash(f'Registration failed: {exc}')
-            return render_template('volunteer_registration.html')
 
-        flash('Registration successful! Please log in.')
-        return redirect(url_for('volunteer_login'))
+            print("========== DATABASE ERROR ==========")
+            print(repr(exc))
+            print("====================================")
 
-    return render_template('volunteer_registration.html')
+            if conn:
+                try:
+                    conn.rollback()
+                    conn.close()
+                except:
+                    pass
+
+            flash(
+                f'Registration failed: {exc}'
+            )
+
+            return render_template(
+                'volunteer_registration.html'
+            )
+
+        finally:
+            if conn:
+                try:
+                    conn.close()
+                except:
+                    pass
+
+        flash(
+            'Registration successful! Please log in.'
+        )
+
+        return redirect(
+            url_for('volunteer_login')
+        )
+
+    return render_template(
+        'volunteer_registration.html'
+    )
 
 
 @app.route('/volunteer-login', methods=['GET', 'POST'])
