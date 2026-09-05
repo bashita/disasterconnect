@@ -348,9 +348,6 @@ def volunteer_login():
         if not email or not password:
             return render_template('volunteer_login.html', error='Email and password are required.')
 
-        if not DB_AVAILABLE:
-            return render_template('volunteer_login.html', error='MySQL is not configured. Set MYSQL_USER and MYSQL_PASSWORD before logging in.')
-
         try:
             conn = get_connection()
             with conn.cursor() as cursor:
@@ -367,6 +364,7 @@ def volunteer_login():
                 return render_template('volunteer_login.html', error='Invalid email or password.')
 
             return render_template('volunteer_login.html', error='Invalid email or password.')
+
         except Exception as exc:
             traceback.print_exc()
             return render_template('volunteer_login.html', error=f'Login error: {exc}')
