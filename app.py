@@ -295,7 +295,6 @@ def register():
         location = request.form.get('location', '').strip()
         latitude = request.form.get('latitude', '').strip() or None
         longitude = request.form.get('longitude', '').strip() or None
-        longitude=request.form.get('longitude','').strip()
         age=request.form.get('age','').strip()
         gender=request.form.get('gender','').strip()
         is_available = request.form.get('is_available', '').strip()
