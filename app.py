@@ -1016,8 +1016,8 @@ def coordinator_dashboard():
     SELECT COUNT(*) AS pending
     FROM victim_reports
     WHERE status = 'PENDING'
-""")
-pending_victim_reports = cur.fetchone()['pending']
+    """)
+    pending_victim_reports = cur.fetchone()['pending']
     
     cur.execute("SELECT * FROM emergencies ORDER BY created_at DESC")
     emergencies = cur.fetchall()
