@@ -1012,6 +1012,13 @@ def coordinator_dashboard():
     cur.execute("SELECT COUNT(*) AS completed FROM tasks WHERE status = 'Completed'")
     completed_tasks = cur.fetchone()['completed']
 
+    cur.execute("""
+    SELECT COUNT(*) AS pending
+    FROM victim_reports
+    WHERE status = 'PENDING'
+""")
+pending_victim_reports = cur.fetchone()['pending']
+    
     cur.execute("SELECT * FROM emergencies ORDER BY created_at DESC")
     emergencies = cur.fetchall()
 
@@ -1070,6 +1077,7 @@ def coordinator_dashboard():
         active_volunteers=active_volunteers,
         active_emergencies=active_emergencies,
         completed_tasks=completed_tasks,
+        pending_victim_reports=pending_victim_reports,
         emergencies=emergencies,
         volunteers=volunteers,
         emergencies_by_type=emergencies_by_type,
