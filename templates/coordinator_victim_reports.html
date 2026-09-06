@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Victim Emergency Reports</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .report-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .critical {
+            border-left: 6px solid #d32f2f;
+        }
+
+        .high {
+            border-left: 6px solid #f57c00;
+        }
+
+        .medium {
+            border-left: 6px solid #fbc02d;
+        }
+
+        .low {
+            border-left: 6px solid #388e3c;
+        }
+
+        .row {
+            margin: 8px 0;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .location {
+            margin-top: 15px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 25px;
+            text-decoration: none;
+            color: #1976d2;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{{ url_for('coordinator_dashboard') }}" class="back">
+        ← Back to Coordinator Dashboard
+    </a>
+
+    <h1>🚨 Victim Emergency Reports</h1>
+
+    {% if reports %}
+
+        {% for report in reports %}
+
+            <div class="report-card {{ report.severity|lower }}">
+
+                <div class="row">
+                    <span class="label">Emergency:</span>
+                    {{ report.emergency_type }}
+                </div>
+
+                <div class="row">
+                    <span class="label">Severity:</span>
+                    {{ report.severity }}
+                </div>
+
+                <div class="row">
+                    <span class="label">Help Required:</span>
+                    {{ report.help_required }}
+                </div>
+
+                <div class="row">
+                    <span class="label">Victim:</span>
+                    {{ report.victim_name or 'Anonymous' }}
+                </div>
+
+                <div class="row">
+                    <span class="label">Contact:</span>
+                    {{ report.contact_number }}
+                </div>
+
+                <div class="row location">
+                    <span class="label">GPS Location:</span>
+                    {{ report.latitude }}, {{ report.longitude }}
+                </div>
+
+                <div class="row">
+                    <span class="label">Status:</span>
+                    {{ report.status }}
+                </div>
+
+                <div class="row">
+                    <span class="label">Reported At:</span>
+                    {{ report.created_at }}
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty">
+            <h3>No emergency reports yet.</h3>
+            <p>Victim-submitted emergency reports will appear here.</p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
