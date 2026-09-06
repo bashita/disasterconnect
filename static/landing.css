@@ -574,3 +574,38 @@ footer p {
     font-size: 2rem;
   }
 }
+/* =========================================================
+   REPORT AN EMERGENCY BUTTON
+   ========================================================= */
+
+.victim-report-btn {
+    display: block;
+    width: fit-content;
+    margin: 2rem auto;
+    padding: 0.9rem 1.8rem;
+
+    background: #F59E0B;
+    color: #0B1120;
+
+    border: 1px solid #FBBF24;
+    border-radius: 12px;
+
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.2);
+
+    transition: all 0.3s ease;
+}
+
+.victim-report-btn:hover {
+    background: #FBBF24;
+    color: #0B1120;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+.victim-report-btn:active {
+    transform: translateY(0);
+}
