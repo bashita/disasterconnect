@@ -1530,5 +1530,72 @@ def contact_messages():
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+@app.route('/victim-report', methods=['GET', 'POST'])
+def victim_report():
+    if request.method == 'POST':
+        emergency_type = request.form.get('emergency_type', '').strip()
+        severity = request.form.get('severity', '').strip()
+        latitude = request.form.get('latitude', '').strip()
+        longitude = request.form.get('longitude', '').strip()
+        victim_name = request.form.get('victim_name', '').strip()
+        contact_number = request.form.get('contact_number', '').strip()
+
+        help_required = request.form.getlist('help_required')
+
+        # Validate required fields
+        if not emergency_type or not severity or not latitude or not longitude:
+            flash('Please provide emergency type, severity and GPS location.')
+            return render_template('victim_report.html')
+
+        if not help_required:
+            flash('Please select at least one type of help required.')
+            return render_template('victim_report.html')
+
+        if not contact_number:
+            flash('Please enter your contact number.')
+            return render_template('victim_report.html')
+
+        try:
+            conn = get_connection()
+
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    '''
+                    INSERT INTO victim_reports (
+                        emergency_type,
+                        severity,
+                        latitude,
+                        longitude,
+                        help_required,
+                        victim_name,
+                        contact_number
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ''',
+                    (
+                        emergency_type,
+                        severity,
+                        latitude,
+                        longitude,
+                        ', '.join(help_required),
+                        victim_name,
+                        contact_number
+                    )
+                )
+
+            conn.commit()
+            conn.close()
+
+            flash('Emergency reported successfully! The coordinator has been notified.')
+            return redirect(url_for('index'))
+
+        except Exception as exc:
+            print("VICTIM REPORT ERROR:", exc)
+            flash('Unable to submit the emergency report. Please try again.')
+            return render_template('victim_report.html')
+
+    return render_template('victim_report.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
