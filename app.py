@@ -1597,5 +1597,35 @@ def victim_report():
 
     return render_template('victim_report.html')
 
+@app.route('/coordinator/victim-reports')
+def coordinator_victim_reports():
+    if 'coordinator_id' not in session:
+        return redirect(url_for('coordinator_login'))
+
+    try:
+        conn = get_connection()
+
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT *
+                FROM victim_reports
+                ORDER BY created_at DESC
+            """)
+
+            reports = cursor.fetchall()
+
+        conn.close()
+
+        return render_template(
+            'coordinator_victim_reports.html',
+            reports=reports
+        )
+
+    except Exception as exc:
+        print("VICTIM REPORTS ERROR:", exc)
+        flash("Unable to load victim emergency reports.")
+        return redirect(url_for('coordinator_dashboard'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
