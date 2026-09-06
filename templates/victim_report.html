@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report an Emergency - DisasterConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .severity-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .severity-options label {
+            font-weight: normal;
+            background: #f1f1f1;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .help-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .help-option {
+            font-weight: normal;
+            padding: 10px;
+            background: #f7f7f7;
+            border-radius: 8px;
+        }
+
+        .location-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .location-box input {
+            flex: 1;
+        }
+
+        .location-btn {
+            border: none;
+            background: #1976d2;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .location-btn:hover {
+            background: #125aa0;
+        }
+
+        .location-status {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #d32f2f;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #b71c1c;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #1976d2;
+        }
+
+        .flash {
+            padding: 12px;
+            margin-bottom: 20px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            color: #856404;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px auto;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .location-box {
+                flex-direction: column;
+            }
+
+            .help-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="form-card">
+
+        <h1>🚨 Report an Emergency</h1>
+
+        <p class="subtitle">
+            Report an emergency to the DisasterConnect coordinator
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+
+        <form method="POST" action="{{ url_for('victim_report') }}">
+
+            <!-- Emergency Type -->
+            <div class="form-group">
+
+                <label for="emergency_type">
+                    Emergency Type *
+                </label>
+
+                <select id="emergency_type"
+                        name="emergency_type"
+                        required>
+
+                    <option value="">
+                        Select Emergency Type
+                    </option>
+
+                    <option value="Flood">
+                        Flood
+                    </option>
+
+                    <option value="Fire">
+                        Fire
+                    </option>
+
+                    <option value="Accident">
+                        Accident
+                    </option>
+
+                    <option value="Medical Emergency">
+                        Medical Emergency
+                    </option>
+
+                    <option value="Building Collapse">
+                        Building Collapse
+                    </option>
+
+                    <option value="Cyclone/Storm">
+                        Cyclone / Storm
+                    </option>
+
+                    <option value="Earthquake">
+                        Earthquake
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Severity -->
+            <div class="form-group">
+
+                <label>
+                    Severity *
+                </label>
+
+                <div class="severity-options">
+
+                    <label>
+                        <input type="radio"
+                               name="severity"
+                               value="Low"
+                               required>
+                        Low
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                               name="severity"
+                               value="Medium">
+                        Medium
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                               name="severity"
+                               value="High">
+                        High
+                    </label>
+
+                    <label>
+                        <input type="radio"
+                               name="severity"
+                               value="Critical">
+                        Critical
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- GPS Location -->
+            <div class="form-group">
+
+                <label>
+                    Location *
+                </label>
+
+                <div class="location-box">
+
+                    <input type="text"
+                           id="location_display"
+                           placeholder="GPS location"
+                           readonly
+                           required>
+
+                    <button type="button"
+                            class="location-btn"
+                            onclick="getLocation()">
+
+                        📍 Get GPS Location
+
+                    </button>
+
+                </div>
+
+                <input type="hidden"
+                       id="latitude"
+                       name="latitude">
+
+                <input type="hidden"
+                       id="longitude"
+                       name="longitude">
+
+                <div id="location_status"
+                     class="location-status">
+
+                    Click "Get GPS Location" to detect your location.
+
+                </div>
+
+            </div>
+
+
+            <!-- Help Required -->
+            <div class="form-group">
+
+                <label>
+                    Immediate Help Required *
+                </label>
+
+                <div class="help-options">
+
+                    <label class="help-option">
+                        <input type="checkbox"
+                               name="help_required"
+                               value="Medical">
+                        Medical
+                    </label>
+
+                    <label class="help-option">
+                        <input type="checkbox"
+                               name="help_required"
+                               value="Rescue">
+                        Rescue
+                    </label>
+
+                    <label class="help-option">
+                        <input type="checkbox"
+                               name="help_required"
+                               value="Food">
+                        Food
+                    </label>
+
+                    <label class="help-option">
+                        <input type="checkbox"
+                               name="help_required"
+                               value="Water">
+                        Water
+                    </label>
+
+                    <label class="help-option">
+                        <input type="checkbox"
+                               name="help_required"
+                               value="Shelter">
+                        Shelter
+                    </label>
+
+                    <label class="help-option">
+                        <input type="checkbox"
+                               name="help_required"
+                               value="Transportation">
+                        Transportation
+                    </label>
+
+                    <label class="help-option">
+                        <input type="checkbox"
+                               name="help_required"
+                               value="Other">
+                        Other
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- Victim Name -->
+            <div class="form-group">
+
+                <label for="victim_name">
+                    Your Name
+                </label>
+
+                <input type="text"
+                       id="victim_name"
+                       name="victim_name"
+                       placeholder="Optional">
+
+            </div>
+
+
+            <!-- Contact -->
+            <div class="form-group">
+
+                <label for="contact_number">
+                    Contact Number *
+                </label>
+
+                <input type="tel"
+                       id="contact_number"
+                       name="contact_number"
+                       placeholder="Enter phone number"
+                       required>
+
+            </div>
+
+
+            <!-- Submit -->
+            <button type="submit"
+                    class="submit-btn">
+
+                🚨 REPORT EMERGENCY
+
+            </button>
+
+        </form>
+
+
+        <a href="{{ url_for('index') }}"
+           class="back-link">
+
+            ← Back to Home
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function getLocation() {
+
+    const status = document.getElementById("location_status");
+    const display = document.getElementById("location_display");
+
+    const latitude = document.getElementById("latitude");
+    const longitude = document.getElementById("longitude");
+
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "GPS location is not supported by this browser.";
+
+        return;
+    }
+
+
+    status.innerText =
+        "Getting your GPS location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const lat =
+                position.coords.latitude;
+
+            const lon =
+                position.coords.longitude;
+
+
+            latitude.value = lat;
+            longitude.value = lon;
+
+
+            display.value =
+                lat.toFixed(6) + ", " +
+                lon.toFixed(6);
+
+
+            status.innerText =
+                "✓ GPS location detected successfully.";
+
+        },
+
+        function(error) {
+
+            console.log(error);
+
+            status.innerText =
+                "Unable to get GPS location. Please allow location permission.";
+
+        }
+
+    );
+
+}
+
+</script>
+
+</body>
+</html>
