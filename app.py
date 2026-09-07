@@ -645,6 +645,68 @@ def volunteer_profile():
         leaderboard_rank=leaderboard_rank
     )
 
+@app.route('/upload-profile-photo', methods=['POST'])
+def upload_profile_photo():
+
+    if "volunteer_id" not in session:
+        return redirect(url_for("volunteer_login"))
+
+    volunteer_id = session["volunteer_id"]
+
+    photo = request.files.get('profile_photo')
+
+    if not photo or not photo.filename:
+        flash("Please select a profile photo.")
+        return redirect(url_for('volunteer_profile'))
+
+    # Allowed extensions
+    allowed_extensions = {
+        'png',
+        'jpg',
+        'jpeg',
+        'webp'
+    }
+
+    original_filename = photo.filename
+
+    extension = original_filename.rsplit('.', 1)[-1].lower()
+
+    if extension not in allowed_extensions:
+        flash("Only JPG, JPEG, PNG and WEBP images are allowed.")
+        return redirect(url_for('volunteer_profile'))
+
+    # Create a unique filename
+    filename = secure_filename(
+        f"volunteer_{volunteer_id}.{extension}"
+    )
+
+    # Save photo
+    photo.save(
+        os.path.join(
+            app.config['UPLOAD_FOLDER'],
+            filename
+        )
+    )
+
+    # Update database
+    db = get_connection()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        UPDATE volunteers
+        SET profile_photo = %s
+        WHERE volunteer_id = %s
+    """, (filename, volunteer_id))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    flash("Profile photo updated successfully.")
+
+    return redirect(url_for('volunteer_profile'))
+
 @app.route('/update-availability', methods=['POST'])
 def update_availability():
 
