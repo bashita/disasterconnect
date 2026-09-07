@@ -24,7 +24,36 @@
   <div class="main">
     <header>
       <h1>Welcome, {{ volunteer.full_name }} 👋</h1>
-      <button class="sos">SOS</button>
+      <form action="{{ url_for('update_availability') }}" method="POST">
+
+    <select name="availability_status"
+            onchange="this.form.submit()"
+            style="
+                padding: 12px 20px;
+                border-radius: 25px;
+                border: 2px solid #F59E0B;
+                background: #111827;
+                color: white;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+            ">
+
+        <option value="">
+            Update Availability
+        </option>
+
+        <option value="available">
+            Available
+        </option>
+
+        <option value="not_available">
+            Not Available
+        </option>
+
+    </select>
+
+</form>
     </header>
 
     <section class="cards">
