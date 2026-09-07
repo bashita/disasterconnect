@@ -548,18 +548,21 @@ def volunteer_profile():
     cursor = db.cursor()
 
     volunteer_sql = """
-    SELECT full_name,
-           email,
-           phone,
-           blood_group,
-           emergency_contact,
-           location,
-           skills,
-           certificate,
-           availability
-    FROM volunteers
-    WHERE volunteer_id = %s
+        SELECT full_name,
+               email,
+               phone,
+               age,
+               gender,
+               blood_group,
+               emergency_contact,
+               location,
+               skills,
+               certificate,
+               availability
+        FROM volunteers
+        WHERE volunteer_id = %s
     """
+
     cursor.execute(volunteer_sql, (volunteer_id,))
     volunteer = cursor.fetchone()
 
@@ -568,35 +571,47 @@ def volunteer_profile():
         db.close()
         return "Volunteer not found"
 
+    # Get tasks
     task_sql = """
-    SELECT task_id, status
-    FROM tasks
-    WHERE volunteer_id = %s
+        SELECT task_id, status
+        FROM tasks
+        WHERE volunteer_id = %s
     """
+
     cursor.execute(task_sql, (volunteer_id,))
     tasks = cursor.fetchall()
 
+    # Completed tasks
     completed_tasks = [
         task for task in tasks
         if task.get('status') == 'Completed'
     ]
+
     completed_count = len(completed_tasks)
+
+    # Assuming 4 hours per completed task
     total_hours = completed_count * 4
 
+    # Leaderboard
     leaderboard_rank = 1
-    cursor.execute(
-        '''
-        SELECT v.volunteer_id, COUNT(t.task_id) AS completed_count
+
+    cursor.execute("""
+        SELECT v.volunteer_id,
+               COUNT(t.task_id) AS completed_count
         FROM volunteers v
         LEFT JOIN tasks t
             ON t.volunteer_id = v.volunteer_id
            AND t.status = 'Completed'
         GROUP BY v.volunteer_id
-        '''
-    )
+    """)
+
     leaderboard_data = cursor.fetchall()
+
     for row in leaderboard_data:
-        if row['volunteer_id'] != volunteer_id and (row['completed_count'] or 0) > completed_count:
+        if (
+            row['volunteer_id'] != volunteer_id
+            and (row['completed_count'] or 0) > completed_count
+        ):
             leaderboard_rank += 1
 
     cursor.close()
@@ -604,20 +619,27 @@ def volunteer_profile():
 
     return render_template(
         "volunteer_profile.html",
+
         name=volunteer['full_name'],
         emailid=volunteer['email'],
         mobileno=volunteer['phone'],
+
+        # NEW
+        age=volunteer['age'],
+        gender=volunteer['gender'],
+
         bloodgroup=volunteer['blood_group'],
         contactno=volunteer['emergency_contact'],
         city=volunteer['location'],
         skills=volunteer['skills'],
         certificate=volunteer['certificate'],
         availability=volunteer['availability'],
+
         completed_count=completed_count,
         total_hours=total_hours,
         leaderboard_rank=leaderboard_rank
     )
-
+    
 @app.route("/task-details")
 def task_details():
 
