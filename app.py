@@ -558,7 +558,9 @@ def volunteer_profile():
                location,
                skills,
                certificate,
-               availability
+               availability,
+               is_available,
+               profile_photo
         FROM volunteers
         WHERE volunteer_id = %s
     """
@@ -624,7 +626,6 @@ def volunteer_profile():
         emailid=volunteer['email'],
         mobileno=volunteer['phone'],
 
-        # NEW
         age=volunteer['age'],
         gender=volunteer['gender'],
 
@@ -633,12 +634,62 @@ def volunteer_profile():
         city=volunteer['location'],
         skills=volunteer['skills'],
         certificate=volunteer['certificate'],
+
         availability=volunteer['availability'],
+        is_available=volunteer['is_available'],
+
+        profile_photo=volunteer['profile_photo'],
 
         completed_count=completed_count,
         total_hours=total_hours,
         leaderboard_rank=leaderboard_rank
     )
+
+@app.route('/update-availability', methods=['POST'])
+def update_availability():
+
+    if "volunteer_id" not in session:
+        return redirect(url_for("volunteer_login"))
+
+    volunteer_id = session["volunteer_id"]
+
+    status = request.form.get('availability_status')
+
+    if status not in ['available', 'not_available']:
+        flash("Invalid availability status.")
+        return redirect(url_for('volunteer_profile'))
+
+    db = get_connection()
+    cursor = db.cursor()
+
+    if status == 'available':
+
+        cursor.execute("""
+            UPDATE volunteers
+            SET is_available = 1,
+                availability = 'Available'
+            WHERE volunteer_id = %s
+        """, (volunteer_id,))
+
+        flash("You are now marked as AVAILABLE.")
+
+    else:
+
+        cursor.execute("""
+            UPDATE volunteers
+            SET is_available = 0,
+                availability = 'Not Available'
+            WHERE volunteer_id = %s
+        """, (volunteer_id,))
+
+        flash("You are now marked as NOT AVAILABLE.")
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return redirect(url_for('volunteer_profile'))
     
 @app.route("/task-details")
 def task_details():
