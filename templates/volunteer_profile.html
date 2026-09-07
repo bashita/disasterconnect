@@ -223,14 +223,22 @@
                 </tr>
 
                 <tr>
+    <td>
+        {% if certificate %}
+            {{ certificate }}
+        {% else %}
+            No certificate uploaded
+        {% endif %}
+    </td>
 
-                    <td>{{ certificate }}</td>
-
-                    <td style="color:lime;">
-                        Verified
-                    </td>
-
-                </tr>
+    <td>
+        {% if certificate %}
+            <span style="color:lime;">Verified</span>
+        {% else %}
+            <span style="color:#ff6b6b;">Not Uploaded</span>
+        {% endif %}
+    </td>
+</tr>
 
                 <tr>
 
