@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "disasterconnect-secret-key-2025")
 
 # Set GEMINI_API_KEY in the environment. Do not commit API keys to source code.
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.0-flash')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.6-flash')
 
 TASK_SKILL_RULES = {
     'flood': ['rescue', 'swimming'],
